@@ -1,0 +1,64 @@
+% !TEX root = master.tex
+\chapter{Aufwandsschätzung}
+%Zielsetzung: Planning Poker durchführen zur Aufwandsschätzung für die in
+%Szenario 2 definierten Arbeitspakete
+%– Bitte verwendet hierzu die Datei 2_Aufwandsplanung
+%– Planning Poker gibt es verschiedentlich online
+%– Wählt eine Referenz-Story (Arbeitspaket) aus und begründet eure Wahl
+%– Beschreibt eure Erfahrungen mit Planning Poker: Was hat gut funktioniert, wo sind
+%Schwierigkeiten aufgetreten?
+%– Wie wurde mit Meinungsverschiedenheiten umgegangen?
+\label{chapter:3}
+Das Planning Poker wurde im Anschluss an die Fertigstellung der Arbeitspakete durchgeführt, wobei jede Runde dokumentiert und in Tabelle \ref{tab:Planning Poker} festgehalten wurde. Die finale Aufwandsschätzung (Beschluss) entspricht stets dem Mittelwert aller Einzelschätzungen und wurde berechnet, sobald die kleinste und größte Einschätzung maximal eine Karte auseinanderlagen oder die dritte Iteration einer Schätzrunde erreicht wurde. 
+
+\begin{table}[!h]
+	\footnotesize
+	\centering
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabularx}{\linewidth}{|X|l|c|c|c|c|r|}
+		\hline
+		\textbf{Arbeitspaket} & \textbf{Iterationen} & \textbf{Eric} & \textbf{Benedikt} & \textbf{David} & \textbf{Lasse} & \textbf{Beschluss} \\ \hline
+		AP-K-1 & 1 & 3 & 5 & 13 & 8 & \\ 
+		& 2 & 5 & 5 & 8 & 8 & \textbf{6,5} \\ \hline
+		AP-K-2 & 1 & 8 & 8 & 13 & 40 & \\ 
+		& 2 & 13 & 13 & 13 & 20 & \textbf{14,75} \\ \hline
+		AP-E-1 & 1 & 5 & 8 & 13 & 100 & \\ 
+		& 2 & 8 & 8 & 13 & 40 & \\ 
+		& 3 & 8 & 8 & 13 & 20 & \textbf{12,25} \\ \hline
+		AP-E-2 & 1 & 8 & 13 & 13 & 40 & \\ 
+		& 2 & 13 & 13 & 13 & 13 & \textbf{13} \\ \hline
+		AP-E-3 & 1 & 20 & 20 & 20 & 20 & \textbf{20} \\ \hline
+		AP-E-4 & 1 & 20 & 20 & 20 & 40 & \textbf{25} \\ \hline
+		AP-T-1 & 1 & 5 & 8 & 8 & 40 & \\ 
+		& 2 & 5 & 5 & 8 & 13 & \\ 
+		& 3 & 5 & 5 & 8 & 8 & \textbf{6,5} \\ \hline
+		AP-T-2 & 1 & 8 & 8 & 13 & 13 & \textbf{10,}5 \\ \hline
+		AP-P-1 & 1 & 40 & 40 & 40 & 40 & \textbf{40} \\ \hline
+		AP-P-2 & 2 & 8 & 8 & 8 & 13 & \textbf{9,25} \\ \hline
+		AP-R-1 & 1 & 8 & 8 & 13 & 40 & \\ 
+		& 2 & 8 & 8 & 8 & 8 & \textbf{8} \\ \hline
+		AP-R-2 & 1 & ? & 13 & 13 & 40 & \\ 
+		& 2 & 13 & 20 & 40 & 40 & \\ 
+		& 3 & 13 & 20 & 20 & 20 & \textbf{18,25} \\ \hline
+	\end{tabularx}
+	\caption{Planning Poker}
+	\label{tab:Planning Poker}
+	\normalsize
+\end{table}
+
+\section{Positive Erfahrungen}
+
+Insgesamt war unserer Erfahrung mit der Methode Planning Poker positiv. Es wurde sachlich aber engagiert diskutiert und letztlich konnte allen Arbeitspaketen eine Aufwandsschätzung zugeordnet werden. Die Verwendung des Smartphone für die Abstimmung sowie das geheime Abstimmen mit anschließender Aufdeckung der Ergebnisse, gibt der Methode einen spielerischen Ansatz, wodurch sie mehr Spaß gemacht hat, als eine offene Diskussion der Aufwände ohne Hilfsmittel. Es wurden alle Regeln eingehalten und alle Mitglieder waren dazu bereit, Kompromisse einzugehen und sich in ihren Einschätzung einander anzunähern. Der gesamte Prozess hat etwa 90 Minuten in Anspruch genommen und wurde von allen Teilnehmern als interessant und produktiv wahrgenommen.
+
+\section{Negative Erfahrungen}
+
+Negativ aufgefallen ist uns, dass man dazu tendiert, eine der mittleren Ausprägungen zu wählen und Extreme zu meiden. Diese Tendenz hat im Laufe der Runden weiter zugenommen. So wurden zu Beginn mitunter auch sehr kleine (3) und große (100) Karten gewählt, während am Ende meist die mittleren Karten (8, 13, 20) gewählt wurden. 
+Zudem haben wir festgestellt, dass man dazu neigt, vergangene Einschätzungen als Richtwert zu nehmen. So wurde oftmals argumentiert, dass ein Arbeitspaket eine gewissen Umfang haben muss, damit es in einem sinnvollen Verhältnis zur Gesamtprojektlaufzeit steht. Dies ist jedoch problematisch, sobald der Richtwert selbst falsch eingeschätzt wurde. Ist die Gesamtprojektlaufzeit beispielsweise zu hoch angesetzt, dann würden die Arbeitspakete künstlich in die Länge gezogen werden, was zu unrealistischen Aufwandsschätzungen und einer unnötigen Verzögerung des Projektfortschritts führt. 
+Außerdem lässt sich kritisieren, dass das Argumentationsgeschick der Teilnehmer im Zweifel ausschlaggebender ist als die objektiven Fakten. So kann eine diskussionsfreudige Person die anderen Teilnehmer mithilfe rhetorischen Geschicks von seinem Standpunkt überzeugen, selbst wenn seine Schätzung unrealistisch ist.
+Ebenso problematisch ist die Tatsache, dass keine Diskussionsrunde eröffnet wird, wenn die Einschätzungen der Teilnehmer übereinstimmen. So ist es durchaus möglich, dass die Schätzungen der Projektmitglieder verschiedene Aspekte berücksichtigen, womit ein Austausch durchaus sinnvoll wäre. Denn nur so ergibt sich ein umfassendes Gesamtbild aller Teilaspekte und eine akkurate Aufwandsschätzung kann erstellt werden.
+Des Weiteren gab es einige Arbeitspakete bei denen eine Schätzung des Aufwands nur schwer möglich war. Dies betraf oft Aufgaben, deren Umfang durch vorangegangene Tätigkeiten bestimmt wurden. Wie viel Zeit für das Beheben von Fehlern während der Pilotierung nötig ist, hängt beispielsweise sehr stark von der Qualität des vorangegangenen Testings ab. Wurden dort alle Edge-Cases berücksichtigt und abgedeckt, werden später auch weniger Fehler auftreten.
+Zuletzt lässt sich auch die generelle Effizienz des Verfahrens in Frage stellen. Für die Bewertung aller 12 Arbeitspakete haben wir etwa 90 Minuten gebraucht. Bei 4 Teilnehmern sind dies bereits 6 Stunden Arbeitszeit, welche in die Umsetzung der Anforderungen hätten investiert werden können. Angesichts der Tatsache, dass in der zweiten und dritten Iteration einer Schätzrunde nur selten neue Argumente vorgetragen werden, lässt sich zudem kritisch hinterfragen, ob es zwingend drei Iterationen geben muss.
+
+\section{Umgang mit Meinungsverschiedenheiten}
+
+Wie der aus Tabelle \ref{tab:Planning Poker} hervorgeht, gingen die Einschätzungen der Teilnehmer teils stark auseinander. So hat Eric dem Arbeitspaket AP-E-1 in der ersten Iteration 5 Story Points zugeordnet, während es bei Lasse 100 waren. Diese große Differenz ist zum einen natürlich auf die subjektiven Erfahrungen und Kenntnisse der einzelnen Teilnehmer, teilweise aber auch auf Verständnisprobleme oder unterschiedliche Interpretationen der Arbeitspakete zurückzuführen. Insofern zweiteres der Fall war, wurde sich auf eine Interpretation der Aufgabe geeinigt und mit der nächsten Iteration fortgefahren. Im Falle subjektiver Meinungsunterschiede wurde allen Teilnehmern die Möglichkeit geboten ihren Standpunkt zu begründen und anschließend konnte frei diskutiert werden. Sobald keine neuen Argumente mehr vorgetragen wurden, wurde die Diskussion abgebrochen und eine neue Iteration gestartet. Mit Ausnahme von Arbeitspaket AP-E-1 konnte durch dieses Vorgehen stets ein Kompromiss erzielt werden. Prinzipiell waren alle Teilnehmer bereit von ihrem Standpunkt abzurücken, es kam allerdings sehr selten vor, dass jemand bereit war in einer Iteration mehr als eine Zahl der Fibonacci-Folge auf die anderen zuzukommen.
