@@ -1,0 +1,49 @@
+- Introduction (Relevanz von NEAT und genetischen Algorithmen maybe iwas mit Natur, Überleitung zu spielen) (1 Donut)
+
+
+- Theorieteil
+
+-- Theoretische Grundlagen von NEAT (4 Donut)
+---- Historisches Wachsen von genetischen Algos
+---- Bestandteile
+
+-- Theoretische Grundlagen von simplen Computerspielen (Lunar Lander) (2 Donut)
+---- Historische Bedeutung von Computerspielen
+---- Bestandteile
+
+-- Theroetische Grundlagen zum Thema Visualisierung (4 Donut)
+---- Psychologische Effekte von Visualisierung (vgl. Text/Bild) beim lernen
+---- Neuster Stand bei visuellen Effekten und Erkentnisse
+
+
+- Praxisteil
+
+-- Kombination von NEAT und Computerspielen (2 Donut)
+---- kurze Überleitung, warum?
+---- Ziel & Fehlermetriken
+
+-- Anforderungen an NEAT in Games (4 Donut)
+---- Techstack Auswahl, warum?
+---- funktionale & nicht funktionale
+---- Implementierung  
+
+-- Anforderungen an die Visualisierung (4 Donut)
+---- Techstack Auswahl, warum?
+---- funktionale & nicht funktionale
+---- Implementierung 
+
+
+- Evaluationsteil
+
+-- Ergebnisse (7 Donut)
+---- Umgesetzte Anforderungen
+---- Genauigkeit des Landers
+---- Vergleich zu anderen Methoden/Baseline
+---- Entstandenes Video mit Bezug auf psychologische Effekt von zuvor (Baseline)
+
+-- Handlungsempfehlung (2 Donut)
+---- NEAT klappt wunderbar damit
+---- Limitationen sind ...
+---- Das Feld hat Zukunft weil ...
+
+30 Donuts = 15 Seiten
