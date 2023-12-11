@@ -120,6 +120,7 @@ initial_species = Species(np.random.choice(genotypes), genotypes, distance_delta
 import os
 import datetime 
 now = datetime.datetime.now()
+now = now.strftime("%Y%m%d_%H%M%S")
 folder = os.path.join('runs', 'continuous_lunar_lander', str(now))
     
 evolved_species, solutions = evolve(
