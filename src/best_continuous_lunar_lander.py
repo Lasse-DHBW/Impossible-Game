@@ -2,7 +2,7 @@ import torch
 from classes.NEAT import *
 species_id = 0
 run = 143
-# 2023-12-07 19:59:20.340927
+# 2023_12_07_19_59_20_340927
 # run 10, species 1 first uses thrusters
 # run 12 species 0 first signs of steering
 # run 15 0, strategy to stay in the air long: no fuel efficiency
@@ -11,15 +11,15 @@ run = 143
 # run = 80 # already good
 # 96
 
-# 2023-12-07 22:13:57.425933
+# 2023_12_07_22_13_57_425933
 # 18, 0 starts to steer
 # 25, 2 strategy to rotate onto the goal
 # 27, 2 minimal thrust, 0 faster
 # 41, 2: almost like pid controller, 0 faster
 # 90: you can see 0 more accurate, but 1 can have room for improvement, it falls faster: less fuel needed
 # highest fitness: 125 species 1, 143 0
-species = torch.load(f'runs/continuous_lunar_lander/2023-12-07 22:13:57.425933/species_{run}.pt')
-fitnesses = torch.load(f'runs/continuous_lunar_lander/2023-12-07 22:13:57.425933/fitness_perspecies_{run}.pt')
+species = torch.load(f'runs/continuous_lunar_lander/2023_12_07_22_13_57_425933/species_{run}.pt')
+fitnesses = torch.load(f'runs/continuous_lunar_lander/2023_12_07_22_13_57_425933/fitness_perspecies_{run}.pt')
 
 
 
