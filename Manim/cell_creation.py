@@ -21,7 +21,13 @@ class Membrane(VMobject):
         self.__wobble_variance = 0.025
         self.__wobble_wavelength = 0.04
 
+        # For rotation
+        self.rotation_target = 0
+        self.rotation_current = 0
+        self.rotation_speed = 0.01
+
         self.add_updater(self.wobble)
+        self.add_updater(self.follow_cell)
 
     def __create_points(self):
         points = []
@@ -40,28 +46,86 @@ class Membrane(VMobject):
             point[0], point[1] = self.__original_coords[i][0]*factor, self.__original_coords[i][1]*factor
         
         mobject.points[-1] = mobject.points[0]
-        self.move_to(self.cell.get_center())
         self.__counter = self.__counter + 1
 
-  
-class Nucleus(Square):
-    def __init__(self, cell, **kwargs):
-        super().__init__(**kwargs)
-        self.cell = cell
-        self.add_updater(self.follow_cell)
-    
     def follow_cell(self, mobject, dt):
         self.move_to(self.cell.get_center())
+        if self.rotation_target > self.rotation_current:
+            self.rotation_current += self.rotation_speed
+            self.rotate(self.rotation_current)
+
+  
+class Nucleus(VGroup):
+    def __init__(self, cell, genotype, **kwargs):   
+        super().__init__(**kwargs)
+
+        # For movement
+        self.cell = cell
+        self.rotation_target = 0
+        self.rotation_speed = 0.01
+        self.add_updater(self.follow_cell)
+
+        # For Content
+        self.genotype = genotype
+        self.create_phenotype()
+
+    def follow_cell(self, mobject, dt):
+        self.move_to(self.cell.get_center())
+        if self.rotation_target > 0:
+            self.rotate(self.rotation_speed)
+            self.rotation_target -= self.rotation_speed
+
+    def create_phenotype(self):
+        nodes = []
+        edges = []
+        # for gene in self.genotype:
+        #     # TODO
+        #     pass
+
+        input_layer = Circle(radius=0.1, color=WHITE)
+        output_layer = Circle(radius=0.1, color=WHITE).shift(RIGHT)
+        arrow = Arrow(input_layer.get_center(), output_layer.get_center())
+        self.add(input_layer, output_layer, arrow)
+        self.center()
+        
+
+            
+
+class Cell(Rectangle):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
+    def rotate_all(self, angle, nucleus, membrane):
+        nucleus.rotation_target = angle
+        membrane.rotation_target = angle
+        self.rotate(angle)
 
 
 class MyScene(MovingCameraScene):
     def construct(self):
+        # Settings
+        frame_height = 16
+        frame_width = 28
+
+        # Camera
+        # self.camera.frame_height=frame_height   # default: 8
+        # self.camera.frame_width=frame_width    # default:14
+        
+        # Background
+        # numberplane = NumberPlane(
+        #     x_range=(- frame_width//2, frame_width//2, 1), 
+        #     y_range=(- frame_height//2, frame_height//2, 1)
+        #     )
+        # self.add(numberplane)
     
-        cell = Rectangle(width=4.25, height=2.25)
-        nucleus = Nucleus(cell=cell, side_length=0.5)
-        membrane = Membrane(scene=self, color=WHITE, cell=cell)
+        # Cells
+        cell = Cell(width=4.25, height=2.25)
+        nucleus = Nucleus(cell=cell, genotype=None)
+        membrane = Membrane(cell=cell, scene=self, color=WHITE)
+        # cell.rotate_all(angle=np.pi, nucleus=nucleus, membrane=membrane)
 
         self.add(cell, nucleus, membrane)
-        self.play(cell.animate.shift(RIGHT*2), run_time=3)
+        # self.play(cell.animate.shift(RIGHT*2, UP), run_time=3)
+        self.wait(5)
 
         
