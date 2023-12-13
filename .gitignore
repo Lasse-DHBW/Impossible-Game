@@ -1,5 +1,6 @@
 # Custom
-Manim/media/
+media/
+notes.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
