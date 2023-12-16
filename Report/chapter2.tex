@@ -4,15 +4,26 @@
 \section{Grundlagen von NEAT}
 (2 Seiten)
 ---- Historisches Wachsen von genetischen Algos - erste ML powered Chatbots, Neuronale Netze, Supervised Learning, Big Data und am Ende das unsupervised deep-learning mit sich selbst adjustierenden Gewichte. Darauf basierend im nächsten Schritt modellierung natürlichen Verhaltens durch genetik. 
----- Bestandteile (Grafik zum Grundlegenden Konzept von NEAT)
+---- Bestandteile, N=Neuro-NeuronaleNetze, E=Evolution-Mutation, Crossover, Selection, A=Augmenting- kleinstes NN am Anfang-falls zu schlecht mehr komplexität, T=Topology-Anzahl an Neuronen und Layer sowie Aufbau dessen. Phenotype (ein neuronales Netz), Genotype (ein gewisses Genset), Speciation. Ein Genom mit mehreren Genen, entweder Knoten, oder Kanten-gen. Kantengene haben Innovationsnummern-beschreibt wann eine Kante kreiert wurde, diese werden über alle Netzwerke hinweg gleich sein-wenn ein Netzwerk eine neue Kante erstellt die keine vorheriges hatte bekommt das eine hohe Innovationsnummer. Falls die woanders schon existiert wird die Nummer von der Kante reduziert-Grundlage für gutes Crossover-das passiert nur auf Kantengene, da die Knotengene von dieses abgeleitet werden können-eine Knotenkanten klasse besitzt typischerweise fünf Attribute: 1. Innovationsnummer, 2. Ursprungsknoten, 3. Endknoten, 4. Gewicht, 5. IstAktiv. Ein Knoten hat zwei Attribute: 1. Knotennummer und 2. Knotentyp (Sensor, Hidden, Output) Unterscheidung von excess (am Ende, werden nur vererbt wenn das Elternteil höhere Scores trifft) und disjoint gene (werden immer vererbt und gemerged). DAS WARS ZU CROSSOVER. Fünf Mutations typen, entweder eine Verbindung mutieren das heißt eine neue Verbindung mit dem Gewicht zwischen [-2;2], zweitens man fügt einen Knoten irgendwo dazu auf eine zufällige Verbindung, vorherige Verbidnung behält ihren Wert, die neue Verbindung bekommt Gewicht 1. Drittens eine Verbindung aktivieren, oder deaktivieren. Viertens die Gewichtsverschiebung, multipliziert ein zufälliges Gewicht mit einer Nummer zwischen [0;2]. Fünftens die Gewichtsneusetzung, komplett neues Gewicht zwischen [-2;2]. ENDE MUTATION. Selektion: Unterschiedliche Genome und jedes davon hat einen bestimmten Score in der Simulation erreicht. Speziefizierung  der Genome-Wenn die Distanz zweier Genome unterhalb einer gewissen Grenze ist, gruppiert man diese in eine Spezies - geht nicht um den Score sondern um die Gewichte, wenige Excess und Disjoint Gene. Falls die Distanz zu groß ist und es keine Spezies dafür gibt, erstellt man eine neue Spezies startend mit diesem Genom. Sortieren der Genome innerhalb der einzelnen Spezien basierend auf ihrem Score, absteigend. Dann selektiert man basierend auf einem Schwellenwert eine gewisse Anzahl an Genomen aus jeder Spezie (häufig 50\%) und vernachlässigt alle restlichen im weiteren Programmablauf. Auch sehr schlechte Genome können diesen Prozess durchstehen, da Sie in einer kleinen Spezie sind. Das garantiert Innovation auf der Topologie Ebene, welches durch kleiner Mutationen vielleicht noch wesentlich besser werden könnte. (Grafik zum Grundlegenden Konzept von NEAT)
 
 \section{Grundlagen von simplen Computerspielen}
 (1 Seiten)
----- Historische Bedeutung von Computerspielen (hohe gesellschaftliche Durchdringung von Spielen egal ob Militär oder Familie, Kompetitv aber begrenzt, zuerst Brettspiele dann Computer, soziales Tun, Vorfornt in der Analyse von menschlichen psychologischen Verhalten)
+---- Historische Bedeutung von Computerspielen (hohe gesellschaftliche Durchdringung von Spielen egal ob Militär oder Familie, Kowmpetitv aber begrenzt, zuerst Brettspiele dann Computer, soziales Tun, Vorfornt in der Analyse von menschlichen psychologischen Verhalten)
 ---- Bestandteile (variierende Umgebung, neue Input Reize, ein Ziel, z.B. Highscore oder Überleben, häufig Kompetitv, Spieler steuert einen Agenten in einer simplifizierten Welt, visuell häufig ausgeklügelt aber nicht ausschlaggebend für gutes Spiel -> Überleitung zu den Grundlagen der Visualisierung)
 
 \section{Grundlagen zum Thema Visualisierung}
 (2 Seiten)
 ---- Ganz Basic warum Visualisierung -> weil leicht konsumierbar von Menschen, häufig leichter verständlicher und kompensierter als Text. 
+
+https://www.frontiersin.org/articles/10.3389/fncir.2015.00051/full
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6091269/
+https://publishup.uni-potsdam.de/opus4-ubp/frontdoor/deliver/index/docId/5047/file/digarec06\_S116\_156.pdf
+
+
 ---- Psychologische Effekte von Visualisierung (vgl. Text/Bild/Videos) in spielen, dann verallgemeinert auch beim lernen, leichteres lernen? schnelleres lernen? (Grafik zum biologischen sehen) 
 ---- Neuster Stand bei visuellen Effekten und Erkenntnisse, Mikroanimationen, Zerlegung komplexer Themen in Videos - Bewegtbildproduktionen. Trend zu immer kürzeren Videos und schnellere Schnittfolge um Aufmerksamkeit zu bewahren. Finder Anklang auch in der Wissenschaft, leichtere Vermittlung komplexer Inhalte an viele Zuhörer - mehr Wissensvideos zum Beispiel auch im Informatik/Mathematik und Biologie Bereich. 
+
+"Eine ausreichende Lernzeit scheint sich
+demzufolge verstehensförderlich auszuwirken." (S. 122 d-nb.info)
+Visualisierungen erhöhen den Lernerfolg und reduzieren die mentale Belastungen bei dem Verständnis von wissenschaftlichen Texten. (vgl. S. 118 d-nb.info)
+Zudem reduzieren Videos die mentale Belastung im Vergleich zu statischen Bildern beim Verständnis neuer Konzepte. (vgl. S. 324 hbz-nrw.de)
