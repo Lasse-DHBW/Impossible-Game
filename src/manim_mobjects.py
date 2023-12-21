@@ -4,16 +4,24 @@ import numpy as np
 from manim_utils import CText
 
 class Membrane(VMobject):
-    def __init__(self, cell, color, num_waves, wobble_frequency):
+    def __init__(self, cell, num_waves, wobble_frequency):
         super().__init__()
         self.cell = cell
+        self.reference_ellipse = Ellipse(width=cell.width, height=cell.height)
 
         # For membrane shape
         self.__w = cell.width - cell.max_wobble_offset 
         self.__h = cell.height - cell.max_wobble_offset 
         self.__create_points()  # num points increases, because of set_points_smoothly
         self.__original_coords = self.points.copy()
-    
+
+        # For style
+        self.set_style(
+            stroke_color=WHITE,
+            stroke_opacity=1,
+            fill_opacity=0
+        )
+
         # Wobble Animation
         self.__counter = 0
         self.time_ellapsed = 0
@@ -29,7 +37,15 @@ class Membrane(VMobject):
         self.rotation_speed = 0.01
 
         self.add_updater(self.wobble)
-        self.add_updater(self.follow_cell)
+        # self.add_updater(self.follow_cell)
+
+    def move_to(self, coords):
+        super().move_to(coords)
+        self.reference_ellipse.move_to(coords)
+
+    def rotate(self, angle):
+        super().rotate(angle)
+        self.reference_ellipse.rotate(angle)
 
     def __create_points(self):
         points = []
@@ -43,6 +59,7 @@ class Membrane(VMobject):
         self.set_points_smoothly(points) # adds additional points to the 201 points
 
     def wobble(self, mobject, dt):
+        curr_loc = self.get_center()
         self.time_ellapsed += dt
 
         for i, point in enumerate(self.points):                    
@@ -52,6 +69,7 @@ class Membrane(VMobject):
         
         self.points[-1] = self.points[0]
         self.__counter = self.__counter + 1
+        self.move_to(curr_loc)
 
     def follow_cell(self, mobject, dt):
         self.move_to(self.cell.get_center())
@@ -61,7 +79,7 @@ class Membrane(VMobject):
 
   
 class Nucleus(Graph):
-    def __init__(self, cell, color, genes):
+    def __init__(self, cell, genes):
         self.node_genes, self.connection_genes = genes
         
         self.layout = self.create_layout(
@@ -70,28 +88,24 @@ class Nucleus(Graph):
             partitions=self.partitions
             )
 
-        labels = {}
+        vertex_mobjects = {}
         for node in self.node_set:
-            labels[node] = CText(f"{node}", color=ManimColor("#000000")).scale(0.2)
+            vertex_mobjects[node] = LabeledDot(
+                CText(f"{node}", color=DARK_GRAY, font_size=10),
+                radius=0.10,
+                )
 
         super().__init__(
             self.node_set,
             self.edge_set,
             layout=self.layout,
-            labels=labels,
-            vertex_config={'radius': 0.10},
+            labels=True,
+            vertex_mobjects=vertex_mobjects,
+            edge_config={
+                "stroke_width": 2,
+                "color": WHITE,
+            }
         )
-
-        for labeled_dot in self.vertices.values():
-            labeled_dot.set_color(BLACK)
-            labeled_dot.set_fill(color=WHITE)
-
-
-
-        # self.set_fill(opacity=0)
-        self.set_stroke(width=2)
-
-        self.adjust_edge_opacity()
 
         # Rotate if necessary
         if cell.width > cell.height:
@@ -101,7 +115,7 @@ class Nucleus(Graph):
         self.cell = cell
         self.rotation_target = 0
         self.rotation_speed = 0.01
-        self.add_updater(self.follow_cell)
+        # self.add_updater(self.follow_cell)
 
     @property
     def node_set(self):
@@ -133,7 +147,7 @@ class Nucleus(Graph):
         """
         layout = {}
         num_layers = len(partitions)
-        max_nodes_in_layer = max(len(layer) for layer in partitions)
+        max_nodes_in_layer = max([len(layer) for layer in partitions])
 
         # Calculate vertical positions
         if max_nodes_in_layer > 1:
@@ -162,7 +176,7 @@ class Nucleus(Graph):
         for i, edge in enumerate(self.edges):
             self.edges[edge].set_opacity(weights[i]/max_weight)
         
-    def get_visual_genotype(self, scale_factor):
+    def get_visual_genotype(self, font_scaling):
         """Returns the node genes and connection genes of the graph as boxes containing texts like in the paper."""
         visual_genotype = {
             "node_genes": [],
@@ -194,8 +208,8 @@ class Nucleus(Graph):
                 else:
                     layer = f"Hidden Layer {idx}"
 
-                texts.append(CText(f"Node {node}").scale(scale_factor))
-                texts.append(CText(f"{layer}").scale(scale_factor))
+                texts.append(CText(f"Node {node}").scale(font_scaling))
+                texts.append(CText(f"{layer}").scale(font_scaling))
 
                 save_to_dict("node_genes", texts)
 
@@ -204,11 +218,15 @@ class Nucleus(Graph):
         for edge in self.connection_genes.iterrows():
             texts = []
 
-            texts.append(CText(f"In {edge[1]['in_node']}").scale(scale_factor))
-            texts.append(CText(f"Out {edge[1]['out_node']}").scale(scale_factor))
-            texts.append(CText(f"Weight {edge[1]['weight']:.2f}").scale(scale_factor))
-            texts.append(CText(f"{'Disabled' if edge[1]['is_disabled'] else 'Enabled'}").scale(scale_factor))
-            texts.append(CText(f"Innov {edge[1]['innovation_number']}").scale(scale_factor))
+            texts.append(CText(f"In {edge[1]['in_node']}").scale(font_scaling))
+            texts.append(CText(f"Out {edge[1]['out_node']}").scale(font_scaling))
+            texts.append(VGroup(
+                CText(f"Weight ").scale(font_scaling),
+                DecimalNumber(edge[1]['weight'], num_decimal_places=2).scale(0.2)
+            ).arrange(RIGHT, buff=0.05))
+            # texts.append(CText(f"Weight {edge[1]['weight']:.2f}").scale(font_scaling))
+            texts.append(CText(f"{'Disabled' if edge[1]['is_disabled'] else 'Enabled'}").scale(font_scaling))
+            texts.append(CText(f"Innov {edge[1]['innovation_number']}").scale(font_scaling))
 
             save_to_dict("connection_genes", texts)
 
@@ -228,27 +246,33 @@ class Nucleus(Graph):
         self.adjust_edge_opacity()
 
 
-class Cell(Rectangle):
-    def __init__(self, width, height, genes, color, num_waves, wobble_frequency, opacity):
-        super().__init__(width=width, height=height, color=color)
-        self.set_stroke(opacity=opacity)
-        
+class Cell(VGroup):
+    def __init__(self, width, height, genes, num_waves, wobble_frequency):
         self.width = width
         self.height = height
         self.max_wobble_offset = 0.1
+        
+        # ! <------------ Idee: wieder VGroup statt rectangle. self.reference ellipse ist für die membran um die init coords zu ersetzen
 
         self.nucleus = Nucleus(
             cell=self, 
-            color=color,
             genes=genes,
-            ).set_opacity(opacity)
+            )
+        
+        self.reference_ellipse = Ellipse(width=width, height=height)
         
         self.membrane = Membrane(
             cell=self, 
-            color=color, 
             num_waves=num_waves,
             wobble_frequency=wobble_frequency,
-            ).set_stroke(opacity=opacity)
+            )
+        
+        super().__init__(
+            self.nucleus,
+            self.membrane,
+            self.reference_ellipse,
+        )
+
 
     def rotate_all(self, angle):
         self.nucleus.rotation_target = angle

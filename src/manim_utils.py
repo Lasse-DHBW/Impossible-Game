@@ -15,8 +15,8 @@ def decypher_genotype(genotype):
     return (node_genes, connection_genes)
 
 class CText(Text):
-    def __init__(self, text, color="#eeeeee", font="Montserrat", **kwargs):
-        super().__init__(text, color=color, font=font, **kwargs)
+    def __init__(self, text, font="Montserrat", **kwargs):
+        super().__init__(text, font=font, **kwargs)
 
 
 

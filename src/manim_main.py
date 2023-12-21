@@ -1,29 +1,23 @@
 import os
 from manim import *
 from manim_utils import read_file, decypher_genotype
+from manim_mobjects import Cell, Nucleus
 from manim_utils import CText
-from manim_mobjects import Cell
+import pandas as pd
 import random
 
 # Debugging
-render_animations = True
 random.seed = 42
-short_run_time = 0.2
-long_run_time = 1
+
+color_highlight = YELLOW_D
+color_mutation = BLUE_D
 
 # Neat
 run = '2023_12_07_19_59_20_340927'
 
 class Scene00Setup(MovingCameraScene):
-    def play(self, *args, **kwargs):
-        if render_animations:
-            super().play(*args, **kwargs)
-
     def construct(self):
         self.camera.background_color = "#222222"
-        self.initial_height = self.camera.frame_height
-        self.initial_width = self.camera.frame_width
-
         self.camera.frame.scale_to_fit_height(16)
 
 
@@ -55,19 +49,22 @@ class Scene03Individual(Scene00Setup):
 
         # Create cell
         cell_height = 4
-        cell = Cell(width=cell_height/2, height=cell_height, genes=genes, color=WHITE, num_waves=6, wobble_frequency=3, opacity=0)
+        cell = Cell(width=cell_height/2, height=cell_height, genes=genes, num_waves=6, wobble_frequency=3)
+        cell.set_opacity(0)
+        cell.membrane.set_stroke(opacity=0)
+        cell.nucleus.set_opacity(0)
         self.play(
-            cell.membrane.animate.set_opacity(1),
+            cell.membrane.animate.set_stroke(opacity=1),
             cell.nucleus.animate.set_opacity(0.2),
-            run_time=short_run_time
+            run_time=3
             )
 
         # Zoom in
         v_margin, h_margin = 1.5, 0.5
-        self.play(self.camera.frame.animate.scale_to_fit_height(cell_height + v_margin*2), run_time=short_run_time)
+        self.play(self.camera.frame.animate.scale_to_fit_height(cell_height + v_margin*2), run_time=1)
 
-        # self.play(self.camera.resize_frame_shape(height=cell.height + 1), run_time=short_run_time)
-        # self.play(self.camera.auto_zoom([cell], margin=0.5), run_time=short_run_time)
+        # self.play(self.camera.resize_frame_shape(height=cell.height + 1), run_time=1)
+        # self.play(self.camera.auto_zoom([cell], margin=0.5), run_time=1)
 
         """
         Its nodes represent neurons, similar to those in our brain, and the pathways are the synaptic connections. 
@@ -80,10 +77,7 @@ class Scene03Individual(Scene00Setup):
         for vertice in cell.nucleus.vertices:
             if vertice in cell.nucleus.partitions[0]:
                 cell.nucleus[vertice].set_opacity(1)
-                self.play(cell.nucleus[vertice].animate.set_color(YELLOW), run_time=short_run_time) # run_time=0.15
-                cell.nucleus[vertice].set_color(WHITE)
-        
-        self.wait(short_run_time)
+                self.wait(0.2)
 
         """
         But what about the outputs? This organism has to make decisions, after all. 
@@ -96,10 +90,7 @@ class Scene03Individual(Scene00Setup):
         for vertice in cell.nucleus.vertices:
             if vertice in cell.nucleus.partitions[1]:
                 cell.nucleus[vertice].set_opacity(1)
-                self.play(cell.nucleus[vertice].animate.set_color(YELLOW), run_time=short_run_time)
-                cell.nucleus[vertice].set_color(WHITE)
-        
-        self.wait(short_run_time)
+                self.wait(0.2)
 
         """
         This most basic neural network there are only 2 connections, both connecting one of the outputs 
@@ -111,15 +102,14 @@ class Scene03Individual(Scene00Setup):
 
         # Highlight connections
         for i, edge in enumerate(cell.nucleus.edges):
-            self.play(cell.nucleus.edges[edge].animate.set_color(YELLOW), run_time=short_run_time)
-            cell.nucleus.edges[edge].set_color(WHITE)
+            # self.play(cell.nucleus.edges[edge].animate.set_color(YELLOW), run_time=1)
+            cell.nucleus.edges[edge].set_opacity(1)
         
-        self.wait(short_run_time)
+        self.wait(1)
 
         """
-        This issue will soon be adressed by the process of mutation. But before we look into that, 
-        we must understand how the current architecture of the network is expressed in the context 
-        of the NEAT algorithm. 
+        This issue will soon be adressed through the process of mutation. But before we look into that, 
+        we must understand how the current architecture of the network is expressed in the NEAT framework. 
         """
 
         # Move to side
@@ -137,30 +127,41 @@ class Scene03Individual(Scene00Setup):
         self.play(
             Create(divider),
             cell.membrane.animate.set_opacity(0.5),
-            cell.nucleus.animate.set_opacity(1),
-            run_time = short_run_time
+            cell.nucleus.edges[(0, 10)].animate.set_opacity(0.51),
+            run_time = 1
             )
 
-        self.wait(short_run_time)
+        self.wait(1)
 
         """
+        =========== GRID - GENOTYPE / PHENOTYPE ===========
         First we look at its node gene. There is a node gene for each node of 
         the network expressing which layer it belongs to. 
         """
-        genes_vis_scaling = 0.15
-        node_genes_vis, conn_genes_vis = cell.nucleus.get_visual_genotype(scale_factor=genes_vis_scaling).values()
+
+        grid = {"divider": divider}
+        grid_font_scaling = 0.15
+        grid_padding = 0.2
+        
+        node_genes_vis, conn_genes_vis = cell.nucleus.get_visual_genotype(font_scaling=grid_font_scaling).values()
+        grid["conn_genes"] = VGroup(*conn_genes_vis)
 
         starting_position = UP*(self.camera.frame_height/2 - v_margin) + LEFT*(self.camera.frame_width/2 - cell.width - h_margin*3)
-        grid_padding = 0.2
 
         node_gene_title = CText("Node Genes").scale(0.25)
+        grid["node_gene_title"] = node_gene_title
         node_gene_title.move_to(starting_position + DOWN*(node_gene_title.height/2) + RIGHT*(node_gene_title.width/2))
-        self.play(Write(node_gene_title), run_time=short_run_time)
+        self.play(Write(node_gene_title), run_time=1)
         starting_position = starting_position + DOWN*(node_gene_title.height + grid_padding)
         
         input_layer = [node_gene for node_gene in node_genes_vis if node_gene[0][1].text == "InputLayer"]
         hidden_layer = [node_gene for node_gene in node_genes_vis if node_gene[0][1].text[:11] == "HiddenLayer"]
         output_layer = [node_gene for node_gene in node_genes_vis if node_gene[0][1].text == "OutputLayer"]
+        
+        grid.update({
+            "input_layer": VGroup(*input_layer),
+            "output_layer": VGroup(*output_layer)
+        })
 
         for layer in [input_layer, hidden_layer, output_layer]:
             if layer.__len__() == 0:
@@ -183,10 +184,12 @@ class Scene03Individual(Scene00Setup):
         connected, which weight the connection has its innovation number and wether or not the gene is 
         "enabled". The meaning of the last two attributes will be explained in a second.
         """
+
         conn_gene_title = CText("Connection Genes").scale(0.25)
+        grid["conn_gene_title"] = conn_gene_title
 
         conn_gene_title.move_to(starting_position + DOWN*(conn_gene_title.height/2 + grid_padding) + RIGHT*(conn_gene_title.width/2))
-        self.play(Write(conn_gene_title), run_time=short_run_time)
+        self.play(Write(conn_gene_title), run_time=1)
         starting_position = starting_position + DOWN*(conn_gene_title.height + grid_padding*2)
 
         max_cols = 5
@@ -199,7 +202,8 @@ class Scene03Individual(Scene00Setup):
                 RIGHT*(conn_gene.width/2) + RIGHT*right_shift
                 )
             self.play(Create(conn_gene), run_time=0.1)
-        # starting_position = starting_position + DOWN*((conn_gene.__len__()//6 + 1) * conn_gene[0].height + (conn_gene.__len__()//6 + 1) * grid_padding)
+
+        self.wait(2)
 
         """
         But first: Some terminology. The graph representation as well as the 
@@ -207,70 +211,70 @@ class Scene03Individual(Scene00Setup):
         node and connection genes form the genotype.
         """
 
-        grid = VGroup(node_gene_title, conn_gene_title, *node_genes_vis, *conn_genes_vis)
-
         phenotype_title = CText("Phenotype", weight=BOLD).scale(0.4)
         phenotype_title.move_to(UP*(self.camera.frame_height/2 - 0.5 - phenotype_title.height/2) + LEFT*(self.camera.frame_width/2 - h_margin - phenotype_title.width/2))
         genotype_title = CText("Genotype", weight=BOLD).scale(0.4)
         genotype_title.move_to(UP*(self.camera.frame_height/2 - 0.5 - genotype_title.height/2) + LEFT*(self.camera.frame_width/2 - cell.width - h_margin*3 - genotype_title.width/2))
         
-        self.play(Write(phenotype_title), Write(genotype_title), run_time=short_run_time)
+        self.play(Write(phenotype_title), Write(genotype_title), run_time=1)
+
+        grid.update({
+            "phenotype_title": phenotype_title,
+            "genotype_title": genotype_title
+        })
         
         """
+        =========== MUTATION ===========
         Now we will have a look at the process mutation and how it affects the genotype and phenotype of the network.
-        The first and most likely form of mutation is a change in the weight of a connection.
+        The first and most likely form of mutation is a change in the weight of a connection. 
         """
-        conn_genes_df = cell.nucleus.connection_genes
-        conn_genes_df[conn_genes_df["innovation_number"] == 2]["weight"] = 1.24 # in: 0, out: 10
-        conn_genes_vis_new = cell.nucleus.get_visual_genotype(scale_factor=genes_vis_scaling)["connection_genes"]
-
-        edge = (0, 10)
-        old_conn_gene = conn_genes_vis[1][0]  # 1: second conn gene vis, 0: Text, not Rectangle
-        new_conn_gene = conn_genes_vis_new[1][0]
 
         self.play(
-            old_conn_gene[2].animate.set_color(YELLOW), 
-            cell.nucleus.edges[edge].animate.set_color(YELLOW),
-            cell.nucleus.edges[edge].animate.set_opacity(1),
-            run_time=1
-            )
-        
-        self.play(
-            Transform(old_conn_gene, new_conn_gene),
+            cell.membrane.animate.set_stroke(color=color_mutation),
+            run_time=2
         )
 
+        # Setup
+        weight_increase = 3
+        mutation_duration = 60*2  # 2 secs á 60 fps
+        weight_increment = weight_increase / mutation_duration
+        weight = conn_genes_vis[1][0][2]
+        def weight_updater(mobject, dt):
+            new_val = mobject.get_value() + weight_increment
+            mobject.set_value(new_val)
+            cell.nucleus.connection_genes.iloc[1, 3] = new_val
+            cell.nucleus.adjust_edge_opacity()
 
-        cell.nucleus.connection_genes[cell.nucleus.connection_genes["innovation_number"] == 2]["weight"] = 1.24
-        new_connection_genes = cell.nucleus.get_visual_genotype(scale_factor=genes_vis_scaling)["connection_genes"]
-        
-        
-        conn_genes_vis[-1][0][2] = new_connection_genes[-1][0][2]
-        
+        # Highlight edge + text and set membrane to signiture mutation color
+        self.play(
+            cell.nucleus.edges[(0, 10)].animate.set_color(color_highlight),
+            weight.animate.set_color(color_highlight),
+            run_time=1
+            )
 
-        
-        init_num = float(weight.text[-4:])
+        # Animate weight change
+        weight[1].add_updater(weight_updater)
+        self.wait(2) # anim35
+        weight[1].remove_updater(weight_updater)
 
+        # Remove highlighting
+        self.play( # anim36
+            cell.nucleus.edges[(0, 10)].animate.set_color(WHITE),
+            weight.animate.set_color(WHITE),
+            run_time=1
+            )        
 
-        new_weight_txt = Text(f"Weight {1.24}").scale(0.25).move_to(weight_txt.get_center())
-        self.play(Transform(weight_txt, new_weight_txt))
-        conn_genes_vis[-1][0][2] = new_weight_txt
-
-        self.wait(0.5)
-
-        weight.set_color(WHITE)
-        cell.nucleus.edges[(0, 10)].set_color(WHITE)
-        self.wait(1)
-
+        self.wait(2)
 
         """
-        The second possible mutation is the addition of a new connection.
+        The second possible mutation is the addition of a new connection. In our case there is now a new edge connecting node 6 and 10.
         """
 
-        cell.nucleus.add_edge(6, 10, 0.5, False)
+        cell.nucleus.add_edge(6, 10, 2.9, False)
         cell.nucleus.adjust_edge_opacity()
 
-        node_genes_vis, conn_genes_vis = cell.nucleus.get_visual_genotype(scale_factor=0.15).values()
-        new_conn_gene = conn_genes_vis[-1]
+        new_conn_gene = cell.nucleus.get_visual_genotype(font_scaling=grid_font_scaling)["connection_genes"][-1]
+        grid["conn_genes"].add(new_conn_gene)
         
         i += 1
         right_shift = (i % max_cols) * conn_gene.width + (i % max_cols) * grid_padding
@@ -280,19 +284,208 @@ class Scene03Individual(Scene00Setup):
             DOWN*(conn_gene.height/2) + DOWN*down_shift + 
             RIGHT*(conn_gene.width/2) + RIGHT*right_shift
             )
-        
-        self.add(cell.nucleus.edges[(6, 10)], new_conn_gene)
+
+        cell.nucleus.edges[(6, 10)].set_color(color_highlight),
+        new_conn_gene[-1].set_stroke(color=color_highlight),   
+
         self.play(
-            cell.nucleus.edges[(6, 10)].animate.set_color(YELLOW),
-            new_conn_gene[-1].animate.set_stroke(YELLOW),
-            run_time=long_run_time
+            GrowFromCenter(cell.nucleus.edges[(6, 10)]),
+            GrowFromCenter(new_conn_gene),
+            run_time=2
             )
-        cell.nucleus.edges[(6, 10)].set_color(WHITE)
-        new_conn_gene[-1].set_stroke(WHITE)
 
-
+        self.play(
+            cell.nucleus.edges[(6, 10)].animate.set_color(WHITE),
+            new_conn_gene[-1].animate.set_stroke(color=WHITE),
+            run_time=2
+        )
 
         self.wait(2)
+
+        """
+        The last possibility is of course the addition of a new node. This one is by far the least likely to occur, because
+        the NEAT algorithm tries to find the least complex solution. Therefore weight changes occur much more often than node mutations.
+        """
+
+        # Create a new nucleus containing the new node for phenotype
+        node_genes, connection_genes = cell.nucleus.node_genes, cell.nucleus.connection_genes
+        node_genes.iloc[9, 1] = 2  # change node_level of output nodes to 2
+        node_genes.iloc[10, 1] = 2
+        node_genes = node_genes.append({
+            "innovation_number": 11,
+            "node_level": 1
+        }, ignore_index=True)
+        new_nucleus = Nucleus(cell=cell, genes=(node_genes, connection_genes))
+        new_nucleus.move_to(cell.nucleus.get_center())
+        
+
+        # Create the node gene vis box of the new node for genotype
+        new_node_genes = new_nucleus.get_visual_genotype(font_scaling=grid_font_scaling)["node_genes"] 
+        new_node_gene = [node_gene for node_gene in new_node_genes if node_gene[0][1].text[:11] == "HiddenLayer"][0]
+        grid["hidden_layer"] = VGroup(new_node_gene)
+        new_node_gene.move_to(grid["input_layer"][0][1].get_corner(DOWN + LEFT) + RIGHT*(new_node_gene.width/2) + DOWN*(grid_padding + new_node_gene.height/2))
+
+
+        # Create two new connections for the connection that gets split. Delete the old one.
+        new_nucleus.add_edge(6, 11, 1.0, False)
+        new_nucleus.add_edge(11, 10, 1.0, False)
+        del new_nucleus.edges[(6, 10)]
+        cell.nucleus.adjust_edge_opacity()
+
+        new_nucleus.edges[(6, 11)].set_color(color_highlight),
+        new_nucleus.edges[(11, 10)].set_color(color_highlight),
+
+
+        # Create two connection gene vis boxes for the new connections      
+        new_conn_genes = new_nucleus.get_visual_genotype(font_scaling=grid_font_scaling)["connection_genes"][-2:]
+        grid["conn_genes"].add(*new_conn_genes)
+        
+        for new_conn_gene in new_conn_genes:
+            i += 1
+            right_shift = (i % max_cols) * new_conn_gene.width + (i % max_cols) * grid_padding
+            down_shift = (i // max_cols) * new_conn_gene.height + (i // max_cols) * grid_padding
+            new_conn_gene.move_to(
+                starting_position + 
+                DOWN*(new_conn_gene.height/2 + down_shift) +
+                RIGHT*(new_conn_gene.width/2 + right_shift)
+            )
+            new_conn_gene[-1].set_stroke(color=color_highlight),
+   
+
+        # Create text "disabled" for the old conn gene vis box
+        disabled_text = CText("Disabled", color=RED).scale(grid_font_scaling)
+        disabled_text.move_to(
+            grid["conn_genes"][2][0][3].get_corner(UP + LEFT) + 
+            RIGHT*disabled_text.width/2 + 
+            DOWN*(disabled_text.height/2 + output_layer[0].height + grid_padding)
+            )
+
+
+        self.play(
+            # Make space in grid
+            VGroup(
+                grid["output_layer"], 
+                grid["conn_gene_title"], 
+                grid["conn_genes"],
+                ).animate.shift(DOWN*(output_layer[0].height + grid_padding)),
+            
+            run_time=2,
+        )
+
+        self.play(
+            # Add node to phenotype
+            ReplacementTransform(
+                mobject=VGroup(*cell.nucleus.vertices.values())[:9],
+                target_mobject=VGroup(*new_nucleus.vertices.values())[:9],
+            ),
+            ReplacementTransform(
+                mobject=VGroup(*cell.nucleus.vertices.values())[9:11],
+                target_mobject=VGroup(*new_nucleus.vertices.values())[9:11],
+            ),
+            ReplacementTransform(
+                mobject=VGroup(*cell.nucleus.edges.values())[:2],
+                target_mobject=VGroup(*new_nucleus.edges.values())[:2],
+            ),
+            Create(new_nucleus.vertices[11]),
+            FadeIn(new_nucleus.edges[(6, 11)]),
+            FadeIn(new_nucleus.edges[(11, 10)]),
+            FadeOut(cell.nucleus.edges[(6, 10)]),
+            
+            # Insert new node gene in grid
+            FadeIn(new_node_gene),
+
+            # Insert new conn genes in grid
+            FadeIn(new_conn_genes[0]),
+            FadeIn(new_conn_genes[1]),
+
+            run_time=3
+        )
+
+        # replace old nucleus with new one
+        cell.nucleus = new_nucleus   
+        grid["conn_genes"][2][0][3] = disabled_text
+
+        # set color back to white
+        self.play(
+            new_nucleus.edges[(6, 11)].animate.set_color(WHITE),
+            new_nucleus.edges[(11, 10)].animate.set_color(WHITE),
+            new_conn_genes[0][-1].animate.set_stroke(color=WHITE),
+            new_conn_genes[1][-1].animate.set_stroke(color=WHITE),
+            cell.membrane.animate.set_stroke(color=WHITE),
+            run_time=3
+        )
+
+        self.wait(2)
+
+   
+        """
+        ========== Speciation ============
+        Now that we understand how new genes are introduced into the genotype, lets zoom out
+        and look at a small population of size 4, where each network was affected by different mutations.        
+        """
+
+        species_list = read_file(generation=0, run=run, file="species")
+        basis_node_genes, basis_conn_genes = decypher_genotype(species_list[0].genotypes[0])
+
+        cell = VGroup(cell.membrane, cell.nucleus)  
+
+        # Create genotype for cell 2
+        cell2_node_genes = pd.concat([basis_node_genes, pd.DataFrame({
+            "innovation_number": [11, 12],
+            "node_level": [1, 1]
+        })])        
+        cell2_node_genes.iloc[9, 1] = 2
+        cell2_node_genes.iloc[10, 1] = 2
+
+        cell2_conn_genes = pd.concat([basis_conn_genes, pd.DataFrame({
+            "innovation_number": [6, 8, 9, 13, 15, 16],
+            "in_node": [3, 3, 12, 4, 4, 12],
+            "out_node": [10, 12, 10, 9, 12, 9],
+            "weight": [0.4, 0.6, 1.5, 0.2, 2.4, 1.9],
+            "is_disabled": [True, False, False, True, False, False],
+        })])
+
+        # Create genotype for cell 3
+        cell3_conn_genes = pd.concat([basis_conn_genes, pd.DataFrame({
+            "innovation_number": [3, 10, 12, 11],
+            "in_node": [6, 8, 1, 4],
+            "out_node": [10, 10, 9, 10],
+            "weight": [1.3, 0.3, 1.2, 2.4],
+            "is_disabled": [False, False, False, False],
+        })])
+
+        # Create genotype for cell 4
+        cell4_conn_genes = pd.concat([basis_conn_genes, pd.DataFrame({
+            "innovation_number": [7, 11, 3, 14],
+            "in_node": [2, 4, 6, 5],
+            "out_node": [10, 10, 10, 9],
+            "weight": [0.5, 1.4, 2.0, 0.9],
+            "is_disabled": [False, False, False, False],
+        })])
+
+        cell2 = Cell(width=cell_height/2, height=cell_height, genes=(cell2_node_genes, cell2_conn_genes), num_waves=6, wobble_frequency=3)
+        cell2.move_to((10, 6, 0)).rotate_all(PI/0.4)
+        cell3 = Cell(width=3, height=3, genes=(basis_node_genes, cell3_conn_genes), num_waves=8, wobble_frequency=3)
+        cell3.move_to((8, -5, 0))
+        cell4 = Cell(width=3, height=3, genes=(basis_node_genes, cell4_conn_genes), num_waves=8, wobble_frequency=3)
+        cell4.move_to((-9, -3.5, 0))
+        self.add(cell2, cell3, cell4)
+
+        # von 16 auf 7 war der
+        # 7:12.4
+        # 16:28.4
+        self.play(
+            FadeOut(VGroup(*grid.values())),
+            )
+        
+        self.play(
+            self.camera.frame.animate.scale_to_fit_height(16),
+            cell.animate.shift(UP),
+            run_time=4
+        )
+
+
+
 
 
 class SceneFullSimulation(Scene00Setup):
@@ -363,7 +556,7 @@ class SceneFullSimulation(Scene00Setup):
             self.play(
                 cell.membrane.animate.set_opacity(1),
                 cell.nucleus.animate.set_opacity(0.2),
-                run_time=short_run_time
+                run_time=1
                 )
 
             # Erstmal auf random movement der zellen verzichten. Kann man später auch noch hinzufügen fall zeit passen sollte
@@ -384,25 +577,51 @@ class SceneFullSimulation(Scene00Setup):
 
 class SceneForExperiments(Scene00Setup):
     def construct(self):
-        rect = Rectangle(color=RED).shift(RIGHT)
-        circle = Circle(color=BLUE).shift(LEFT)
-        num = float(0.55)
-        txt = Text(f"{num}").shift(DOWN)
-        txt2 = Text("aah").shift(UP)
+        ld = LabeledDot("01")
 
-        self.add(rect, circle, txt, txt2)
-        self.wait(1)
-        rect.set_color(GREEN)  # Use set_color instead of direct assignment
-        circle.set_color(YELLOW)
-        txt2.text = "bbbb"
+        # self.add(ld)
 
-        def txt_update(txt, dt):
-            new_txt = Text(f"{float(num + 1 * dt):.2f}")
-            self.play(Transform(txt, new_txt))
-            txt = new_txt
+        # self.wait(1)
+        # ld.set_style(
+        #     fill_color=WHITE,
 
-        txt.add_updater(txt_update)
-        self.wait(3)
-        txt.remove_updater(txt_update)
+        #     # stroke_color=RED,
+        #     # stroke_width=2,
+        #     # stroke_opacity=1,
 
-        self.wait(1)
+        #     background_stroke_color=RED,
+        #     background_stroke_opacity=1,
+        #     background_stroke_width=3,
+
+        #     # fill_opacity=0.8,
+        #     # sheen_factor=1,
+        # )
+        # # print(ld.get_style())
+        # # # ld.set_stroke(color=RED)
+        # # ld.set_fill(color=YELLOW_E)
+        # # # ld.set_background_stroke(color=PINK)
+        # # ld.set_opacity(0.8)
+        
+
+        # self.wait(1)
+
+        
+        species_list = read_file(generation=0, run=run, file="species")
+        genes = decypher_genotype(species_list[0].genotypes[0])
+        cell_height = 4
+        cell = Cell(width=cell_height/2, height=cell_height, genes=genes, num_waves=6, wobble_frequency=3)
+        cell = VGroup(cell.membrane, cell.nucleus)
+
+        angle = PI*1-4
+        direction = np.array([-np.cos(angle), np.sin(angle), 0])
+
+        self.play(
+            Rotate(cell, angle),
+        )
+
+        self.play(
+            cell.animate.move_to(direction*2),
+        )
+
+
+
