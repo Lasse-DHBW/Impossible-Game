@@ -125,7 +125,9 @@ class Connection_Gene:
         self.is_disabled = is_disabled
         self.innovation_number = connection_gene_history.get_innovation_number(connection)
         
-            
+# make unique uuid
+import uuid
+      
 class Genotype:
     def __init__(self, node_genes, connection_genes,
                  node_gene_history:Node_Gene_History, connection_gene_history:Connection_Gene_History,
@@ -134,6 +136,7 @@ class Genotype:
                  
                  ):
         
+        self.uuid = datetime.now().strftime("%Y%m%d%H%M%S%f") + '_' + str(uuid.uuid4())
         self.node_genes = node_genes
         self.connection_genes = connection_genes
         self.node_gene_history = node_gene_history
@@ -492,8 +495,9 @@ from typing import List
 from datetime import datetime 
 from tqdm.auto import tqdm
 class Species:
-    def __init__(self, representative, genotypes, distance_delta):
+    def __init__(self, representative, genotypes, distance_delta, number):
         # random representative
+        self.number = number
         self.representative = representative
         self.distance_delta = distance_delta
         self.genotypes = genotypes
@@ -530,6 +534,7 @@ def get_proportional_bins(proportions, n_bins):
 from multiprocessing import Pool
 from multiprocessing.pool import ThreadPool
 
+species_number_tracker = 0
 from functools import partial
 def evolve_once(features, target, 
                 fitness_function, stop_at_fitness:float, 
@@ -542,6 +547,8 @@ def evolve_once(features, target,
                 n_workers=1,
                 gymnasium_env=None
                 ):
+    
+    global species_number_tracker
     
     Node_Gene_History = species[0].representative.node_gene_history
     Connection_Gene_History = species[0].representative.connection_gene_history
@@ -571,9 +578,12 @@ def evolve_once(features, target,
         genotype_size = []
         start = datetime.now()
         with Pool(n_workers) as p:
-            fitnesses = p.map(partial(fitness_function, inputs=features, targets=target), zip(sp.genotypes, gymnasium_env[:len(sp.genotypes)]))
-
-        save_fitnesses[i] = fitnesses
+            fitnesses_and_number = p.map(partial(fitness_function, inputs=features, targets=target), zip(np.arange(len(sp.genotypes)),sp.genotypes, gymnasium_env[:len(sp.genotypes)]))
+        
+        # sort by number
+        fitnesses_and_number = sorted(fitnesses_and_number, key=lambda x: x[1], reverse=False)
+        fitnesses = [fitness for fitness, _ in fitnesses_and_number]
+        save_fitnesses[i] = (fitnesses, sp.genotypes)
         
         for fitness, genotype in zip(fitnesses, sp.genotypes):
             fitness = fitness.item()
@@ -704,14 +714,16 @@ def evolve_once(features, target,
             else: # pick two parents
                 parent1, parent2 = np.random.choice(fit_individuals, 2, replace=False, p=probabilities)
             
-            save_crossings[i] = (parent1, parent2)
             new_genotype = parent1.crossover(parent2, 1, 1)
+            genotype_before_mutation = deepcopy(new_genotype)
+            
             # mutate
             if is_largest_species:
                 new_genotype.mutate(mutate_add_link_prob=largest_species_linkadd_rate)
             else:
                 new_genotype.mutate()
             new_genotypes.append(new_genotype)
+            save_crossings[i] = {'parent1':parent1, 'parent2':parent2, 'offspring':new_genotype, 'offspring_before_mutation':genotype_before_mutation}
     
     # remove old genotypes, except reference genotype
     for sp in species:
@@ -727,10 +739,12 @@ def evolve_once(features, target,
                 break
             
         if not added:
-            new_species.append(Species(genotype, [genotype], distance_delta))
+            species_number_tracker += 1
+            species_number = species_number_tracker
+            new_species.append(Species(genotype, [genotype], distance_delta, species_number))
     
     for i, sp in enumerate(new_species):
-        print(i, 'average distance', np.mean(sp.average_distance))
+        print(sp.number, 'average distance', np.mean(sp.average_distance))
         sp.average_distance = []
     
     torch.save(save_fitnesses, run_folder+f'/fitness_perspecies_{generation_number}.pt')

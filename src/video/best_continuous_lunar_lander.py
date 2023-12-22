@@ -1,7 +1,7 @@
 import torch 
 from classes.NEAT import *
 species_id = 0
-run = 143
+run = 100
 # 2023_12_07_19_59_20_340927
 # run 10, species 1 first uses thrusters
 # run 12 species 0 first signs of steering
@@ -18,7 +18,9 @@ run = 143
 # 41, 2: almost like pid controller, 0 faster
 # 90: you can see 0 more accurate, but 1 can have room for improvement, it falls faster: less fuel needed
 # highest fitness: 125 species 1, 143 0
-#species = torch.load(f'runs/continuous_lunar_lander/2023_12_07_22_13_57_425933/species_{run}.pt')
+
+# 20231217_104829
+# 12 0 start using thrusters, species 1 spawns
 
 fitnesses = torch.load(f'runs/continuous_lunar_lander/20231220_115303/fitness_perspecies_{run}.pt')
 
@@ -63,12 +65,16 @@ def lunar_fitness(genotype_and_env, inputs, targets):
 
 
 
+#genotypes = species[species_id].genotypes
 
-
+#best_genotype = genotypes[np.argmax(fitnesses[species_id])]
+#best_genotype.print_genotype()
+for sp,fitness in fitnesses.items():
+    
+    print(sp,np.max(fitness[0]))
+    
 best_genotype = np.argmax(fitnesses[species_id][0])
 best_genotype = fitnesses[species_id][1][best_genotype]
-for species, fitness in fitnesses.items():
-    print(species, np.max(fitness[0]))
 
 env = gym.make("LunarLander-v2", render_mode='human',continuous=True)       
 env.reset() 
