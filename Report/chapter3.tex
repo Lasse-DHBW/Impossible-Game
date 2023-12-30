@@ -2,13 +2,33 @@
 \chapter{Praktische Ausarbeitung}
 \label{chapter:3}
 \section{Projektbeschreibung}
-(1 Seiten)
----- kurze Überleitung, warum?
----- Ziel \& Fehlermetriken
----- Kombination von NEAT und Computerspielen
+Basierend auf der Faszination für die Modellierung natürlicher Ereignisse in Computer gesteuerten Systemen, ist das Ziel des Projektes basierend auf dem NEAT Algorithmus einen Agenten in einem Computerspiel zu steuern, welcher durch reinforcement learning und selektion in der Lage ist, dieses sehr gut zu spielen.
+
+Als Spiel wurde sich an einem Standard Projekt des Gymnasium (gym) Paketes bedient. Das Python-Paket gym ist eine Open-Source-Bibliothek, die von OpenAI entwickelt wurde und eine Sammlung von standardisierten Umgebungen für die Entwicklung und das Testen von Algorithmen im Bereich des Reinforcement Learning (RL) bietet. gym zielt darauf ab, die Entwicklung und Vergleichbarkeit von RL-Algorithmen zu erleichtern, indem es eine einheitliche Schnittstelle für verschiedene Arten von Umgebungen bereitstellt. Als Teil dieses Paketes gibt es zahlreiche Demo Umgebungen wie zum Beispiel alle Atari Spiele. 
+
+Eins dieser Spiele heißt \enquote{Lunar Lander} und zeichnet sich durch das einfach Ziel, als auch die einfachen Werkzeuge zur Zielerreichung aus. Inhalt des Spiels ist es einen Raketen Flugpfad bei der Landung so zu ändern, sodass diese genau in einem markierten Bereich landet. Als Leistungskriterium wird dabei die finale Distanz zwischen der Rakete und des Mittelpunkt des markierten Bereich gemessen. Zur Erreichung dieses Ziels ist der Agent mit vier möglichen Aktionen ausgestattet, entweder soll er nichts tun, oder das linke Triebwerk aktivieren, oder das rechte Triebwerk aktivieren und als letztes das Haupttriebwerk aktivieren.
+
+Ziel des technischen Teil des Projektes ist es also ein neuronales Netz so zu trainieren, dass basierend auf der relativen Position der Rakete die Triebwerke so aktiviert und deaktiviert werden, dass dieser möglichst nah an, oder auf der Endmarkierung landet. 
+
+Daran anschließend soll ein Erklärvideo zu diesem Thema konzipiert und erstellt werden.
+
 \section{Implementierungskonzept}
-(2 Seiten)
----- Techstack Auswahl, warum?
+Für die Implementierung dieses Projektes wurde aufgrund der Data Science Affinität die Programmiersprache Python gewählt. In dieser wurden mithilfe von Jupyter Notebooks die einzelnen Komponenten des NEAT Algorithmus, als auch die Integration des Algorithmus mit dem Spiel umgesetzt. 
+
+Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewählt:
+\begin{itemize}
+	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden
+	\item Die Rakete soll alleine durch einen Agenten basierend auf dem NEAT Algorithmus gesteuert werden
+	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden
+	\item Der finale Agent soll in 99\% der Fälle auf der Endmarkierung landen können 
+\end{itemize}
+
+Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
+\begin{itemize}
+	\item Das Spiel soll visuell ansprechend und das Ziel klar ersichtlich sein
+	\item Das Programm soll klar strukturiert und replizier bar ausführbar sein
+\end{itemize}
+
 ---- funktionale \& nicht funktionale
 ---- Implementierung  
 
