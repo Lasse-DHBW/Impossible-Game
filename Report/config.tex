@@ -144,27 +144,6 @@
 \newcommand{\ArtDerArbeit}[1]{\def\DieArtDerArbeit{#1}}
 \newcommand{\Literaturverzeichnis}{Literaturverzeichnis}
 
-\newcommand{\DavidsGeileTabellen}[1]{
-	\pagebreak
-	
-	\newgeometry{left=1cm,right=1cm,top=1cm,bottom=1cm}
-	\begin{landscape}
-
-		
-		\thispagestyle{empty}
-		
-		\begin{table}
-			\begin{tabularx}{27.7cm}{c c p{3cm} X c c c p{2.5cm} c X}
-				\textbf{ID} &\textbf{Risikotyp}&\textbf{Titel} &\textbf{Beschreibung} &\textbf{WSK} &\textbf{Stärke} &\textbf{Risiko} &\textbf{Problem Zeitpunkt} &\textbf{MKat} &\textbf{Maßnahme}\\\toprule
-				#1
-			\end{tabularx}
-		\end{table}
-
-
-	\end{landscape}
-	\restoregeometry
-}
-
 \newcommand{\settingBibFootnoteCite}{
 	\setlength{\bibparsep}{\parskip}		  % Add some space between biblatex entries in the bibliography
 	\addbibresource{bibliography.bib}	    % Add file bibliography.bib as biblatex resource
@@ -185,7 +164,7 @@
 
 \newcommand{\initializeBibliography}{
 	\ihead{}
-	\printbibliography[title=\Literaturverzeichnis] 
+
 	\cleardoublepage
 }
 

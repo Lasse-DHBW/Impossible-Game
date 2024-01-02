@@ -18,7 +18,7 @@ Für die Implementierung dieses Projektes wurde aufgrund der Data Science Affini
 Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewählt:
 \begin{itemize}
 	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden
-	\item Die Rakete soll alleine durch einen Agenten basierend auf dem NEAT Algorithmus gesteuert werden
+	\item Die Rakete soll alleine durch einen abgeleiteten Agenten basierend auf dem NEAT Algorithmus gesteuert werden
 	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden
 	\item Der finale Agent soll in 99\% der Fälle auf der Endmarkierung landen können 
 \end{itemize}
@@ -26,14 +26,45 @@ Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewähl
 Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
 \begin{itemize}
 	\item Das Spiel soll visuell ansprechend und das Ziel klar ersichtlich sein
-	\item Das Programm soll klar strukturiert und replizier bar ausführbar sein
+	\item Das Programm soll klar strukturiert und replizierbar ausführbar sein
 \end{itemize}
 
----- funktionale \& nicht funktionale
----- Implementierung  
+
+---- Implementierung  TODO @AMOS
 
 \section{Visualisierungskonzept}
-(2 Seiten)
----- Techstack Auswahl, warum?
----- funktionale \& nicht funktionale (maximale Verständlichkeit bei minimaler Komplexität. Lustiger Gag weil ähnlich zu NEAT. Soll den Algorithmus akkurat wiederspiegeln und erklären. Story technisch ansprechend. Eher länger da vorhin besprochen längere Videos mehr lehren. Visualisierung in Form eines Videos für maximale zugänglichkeit und verdaulichkeit. Vermittlung von einem neuen wissenschaftlichen Konzept.-hohes Expertisen niveau und vorwissen erforderlich. Soll ansprechend für eine Mathematik versierte und wissenschafts interessierte Zuhörerschaft sein. Dabei darf das Video nicht länger als 15 Minuten sein und die Python Bibliothek Manim soll hierzu verwendet werden. Der Stil soll wissenschaftlich schlicht sein.)
----- Implementierung 
+
+Der Techstack des Visualisierungskonzeptes ist durch die Vorgaben des Kurses hervorgegangen. Dementsprechend wurde Python in Kombination mit Manim eingesetzt worden, um das Konzept visuell ansprechend in Videoform zu animieren und darzustellen. Die Vertonung wurde TODO @DAVID...
+
+Die Anforderungen an diesen Teil des Projektes werden ebenfalls in funktionale und nicht funktionale eingeteilt:  
+
+Funktionale 
+\begin{itemize}
+
+	\item Das Video wurde durch Python und Manim animiert und gerendert 
+	\item Die länge des Videos überschreitet nicht 15 Minuten Laufzeit
+	\item Das Video ist vollständig vertont
+	
+\end{itemize}
+
+Nicht funktionale
+\begin{itemize}
+
+	\item Das Video soll ansprechend animiert sein
+	\item Das Konzept von NEAT soll vollständig und verständlich sein
+	\item Visualisierungsgrundlagen sollen berücksichtigt werden
+	\item Ein roter Faden sollte erkennbar sein
+
+\end{itemize}
+
+Bei der Implementierung gilt es die zuvor erarbeiteten Visualisierungsgrundlagen entsprechend einzuordnen und zu verwenden. Beginnend mit den drei zentralen der Planung. Es gilt das übergeordnete Ziel den NEAT Algorithmus anhand von natürlichen Phänomenen möglichst verständlich zu erklären. Das Ziel ist es zu informieren und zu inspiereren. Einerseits über die Möglichkeiten die genetische Algorithmen bieten und andererseits ihr Potential und die Faszination dahinter zu teilen und zu verbreiten. Als Zielgruppe ist aufgrund des wissenschaftliche Kontext vorallem technisch versierte und interessierte Studenten hauptsächlich der Informatik und Mathematik Domäne anzusehen. Hier kann ein maximaler Mehrwert erzeugt werden, da Konzepte wie Neuronale Netze bereits bekannt sind und komplexere Datenübersichten nicht sofort abgetan werden. 
+
+Fortfahrend mit der visuellen Gestaltung wurde sich hauptsächlich an darstellenden und organisierenden Bildern bedient. Damit wird der bei diesem Thema benötigte hohe Informationsfluss und zusätzliche Strukturierung kund getan. Interpretierende Bilder werden immer dann verwendet, wenn das theoretische so komplex ist, dass die Gefahr besteht den Zuhörer zu verlieren und aber auch um Breakpoints zu setzten um bereits verlorene Zuhörer wieder einzufangen. 
+
+Weiterleitend zu den Elementen der Visualisierung. Hier wurde das Präsentationsmedium -Video- basierend auf den funktionalen Anforderungen gewählt. Die Lesbarkeit wird durch die Schriftart Montserrat und dem konsequenten helle Schrift auf dunklen Hintergrund gewährleistet. Die kulturellen Aneignungen sind auf die deutsche Sprache abgestimmt. Das Layout wurde meist nach subjektiver Einschätzung gewählt, beinhaltet jedoch sowohl Umrandungen als auch Hervorhebungen. Farben werden spärlich und in wichtigen Momenten zur verbesserten Anschaulichkeit verwendet. 
+
+Die Darstellung der Daten erfolgte primär über Grafen Diagramme welche die Zugrundelegenden Neuronalen Netze beschreiben. Da die x-y-Achsen Verwechslungskomponente hier keine Relevanz hat, wurden keine Schritte zur Verbesserung der Anschaulichkeit in diese Richtung unternommen. 
+
+Das Projekt wurde zuerst durch ein skizziertes Storyboard geplant. Hierbei kamen alle Gruppenmitglieder zusammen und berieten über die Ausrichtung und den Detailgrad des Videos. Nach einer anschließenden Verfeinerung und finalen Version wurde dieses in vielen kleinen Etappen erweitert ausgearbeitet und animiert. Die Vertonung erfolgte zum Schluss für jeden Abschnitt einzeln. 
+
+ 
