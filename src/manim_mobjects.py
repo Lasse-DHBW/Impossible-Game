@@ -4,16 +4,12 @@ import numpy as np
 from manim_utils import CText
 
 class Membrane(VMobject):
-    def __init__(self, cell, num_waves, wobble_frequency):
+    def __init__(self, reference_ellipse, num_waves, max_wobble_offset, wobble_frequency):
         super().__init__()
-        self.cell = cell
-        self.reference_ellipse = Ellipse(width=cell.width, height=cell.height)
 
         # For membrane shape
-        self.__w = cell.width - cell.max_wobble_offset 
-        self.__h = cell.height - cell.max_wobble_offset 
-        self.__create_points()  # num points increases, because of set_points_smoothly
-        self.__original_coords = self.points.copy()
+        self.reference_ellipse = reference_ellipse
+        self.set_points(self.reference_ellipse.points.copy())
 
         # For style
         self.set_style(
@@ -24,67 +20,37 @@ class Membrane(VMobject):
 
         # Wobble Animation
         self.__counter = 0
-        self.time_ellapsed = 0
+        self.__time_ellapsed = 0
 
-        self.__max_wobble_offset = cell.max_wobble_offset
+        self.__max_wobble_offset = max_wobble_offset
         self.wobble_frequency = wobble_frequency
-        self.__num_waves = num_waves  # how many waves circle the membrane
-        self.__sin_inputs = np.arange(0, self.__num_waves*2*np.pi, (self.__num_waves*2*np.pi) / self.points.__len__())
- 
-        # For rotation
-        self.rotation_target = 0
-        self.rotation_current = 0
-        self.rotation_speed = 0.01
+        self.num_waves = num_waves  # how many waves circle the membrane
+        self.__sin_inputs = np.arange(0, self.num_waves*2*np.pi, (self.num_waves*2*np.pi) / self.points.__len__())
 
         self.add_updater(self.wobble)
-        # self.add_updater(self.follow_cell)
-
-    def move_to(self, coords):
-        super().move_to(coords)
-        self.reference_ellipse.move_to(coords)
-
-    def rotate(self, angle):
-        super().rotate(angle)
-        self.reference_ellipse.rotate(angle)
-
-    def __create_points(self):
-        points = []
-        for i in range(200):
-            angle = 2 * np.pi * i / 200
-            x = self.__w / 2 * np.cos(angle)
-            y = self.__h / 2 * np.sin(angle)
-            points.append([x, y, 0])
-
-        points.append(points[0])  # close the circle
-        self.set_points_smoothly(points) # adds additional points to the 201 points
 
     def wobble(self, mobject, dt):
-        curr_loc = self.get_center()
-        self.time_ellapsed += dt
+        self.__time_ellapsed += dt
 
         for i, point in enumerate(self.points):                    
             angle = 2*np.pi * i / self.points.__len__()
-            amplitude = (self.__max_wobble_offset/2) * np.sin(self.__sin_inputs[i] + (self.wobble_frequency * self.time_ellapsed)) + (self.__max_wobble_offset/2)  # oscelating between 0 and __max_wobble_offset
-            point[0], point[1] = self.__original_coords[i][0]+amplitude*np.cos(angle), self.__original_coords[i][1]+amplitude*np.sin(angle)
+            amplitude = (self.__max_wobble_offset/2) * np.sin(self.__sin_inputs[i] + (self.wobble_frequency * self.__time_ellapsed)) + (self.__max_wobble_offset/2)  # oscelating between 0 and __max_wobble_offset
+            point[0], point[1] = self.reference_ellipse.points[i][0]+amplitude*np.cos(angle), self.reference_ellipse.points[i][1]+amplitude*np.sin(angle)
         
         self.points[-1] = self.points[0]
         self.__counter = self.__counter + 1
-        self.move_to(curr_loc)
-
-    def follow_cell(self, mobject, dt):
-        self.move_to(self.cell.get_center())
-        if self.rotation_target > self.rotation_current:
-            self.rotation_current += self.rotation_speed
-            self.rotate(self.rotation_current)
 
   
 class Nucleus(Graph):
-    def __init__(self, cell, genes):
+    def __init__(self, cell_width, cell_height, genes, use_case="explainer"):
         self.node_genes, self.connection_genes = genes
         
+        v_padding = cell_height*0.4 if use_case == "explainer" else 1
+        h_padding = cell_width*0.4 if use_case == "explainer" else 0.4
+
         self.layout = self.create_layout(
-            height=(cell.height-cell.height*0.4), 
-            spacing=(cell.width-cell.width*0.4)/self.partitions.__len__(), 
+            height=(cell_height-v_padding), 
+            spacing=(cell_width-h_padding)/self.partitions.__len__(), 
             partitions=self.partitions
             )
 
@@ -92,7 +58,13 @@ class Nucleus(Graph):
         for node in self.node_set:
             vertex_mobjects[node] = LabeledDot(
                 CText(f"{node}", color=DARK_GRAY, font_size=10),
-                radius=0.10,
+                radius=0.10, 
+                background_stroke_color=YELLOW_D, 
+                background_stroke_width=8,
+                background_stroke_opacity=0,
+                stroke_opacity=1,
+                stroke_width=2,
+                stroke_color=BLACK
                 )
 
         super().__init__(
@@ -104,18 +76,8 @@ class Nucleus(Graph):
             edge_config={
                 "stroke_width": 2,
                 "color": WHITE,
-            }
+            },
         )
-
-        # Rotate if necessary
-        if cell.width > cell.height:
-            self.rotate(PI/2)
-
-        # For movement
-        self.cell = cell
-        self.rotation_target = 0
-        self.rotation_speed = 0.01
-        # self.add_updater(self.follow_cell)
 
     @property
     def node_set(self):
@@ -123,17 +85,11 @@ class Nucleus(Graph):
 
     @property
     def edge_set(self):
-        return [(row[1]['in_node'], row[1]['out_node']) for row in self.connection_genes.iterrows()]
+        return [(row[1]['in_node'], row[1]['out_node']) for row in self.connection_genes.iterrows() if row[1]['is_disabled'] == False]
 
     @property
     def partitions(self):
         return [list(self.node_genes[self.node_genes['node_level'] == i]['innovation_number']) for i in range(self.node_genes['node_level'].max() + 1)]
-
-    def follow_cell(self, mobject, dt):
-        self.move_to(self.cell.get_center())
-        if self.rotation_target > 0:
-            self.rotate(self.rotation_speed)
-            self.rotation_target -= self.rotation_speed
 
     @staticmethod
     def create_layout(height, spacing, partitions):
@@ -222,7 +178,7 @@ class Nucleus(Graph):
             texts.append(CText(f"Out {edge[1]['out_node']}").scale(font_scaling))
             texts.append(VGroup(
                 CText(f"Weight ").scale(font_scaling),
-                DecimalNumber(edge[1]['weight'], num_decimal_places=2).scale(0.2)
+                DecimalNumber(edge[1]['weight'], num_decimal_places=2).scale(font_scaling*(4/3))
             ).arrange(RIGHT, buff=0.05))
             # texts.append(CText(f"Weight {edge[1]['weight']:.2f}").scale(font_scaling))
             texts.append(CText(f"{'Disabled' if edge[1]['is_disabled'] else 'Enabled'}").scale(font_scaling))
@@ -247,34 +203,58 @@ class Nucleus(Graph):
 
 
 class Cell(VGroup):
-    def __init__(self, width, height, genes, num_waves, wobble_frequency):
-        self.width = width
-        self.height = height
-        self.max_wobble_offset = 0.1
-        
-        # ! <------------ Idee: wieder VGroup statt rectangle. self.reference ellipse ist für die membran um die init coords zu ersetzen
+    def __init__(self, width, height, genes, fitness, num_waves, wobble_frequency):
 
-        self.nucleus = Nucleus(
-            cell=self, 
-            genes=genes,
-            )
-        
-        self.reference_ellipse = Ellipse(width=width, height=height)
+        max_wobble_offset = 0.1 # modulates max amplitude of wobble animation
+
+        # The reference ellipse is a hidden ellipse that is always moving whenever the cell is moving
+        # It acts as a reference for the membrane to wobble around
+        ellipse_points= self._create_ellipse_points(height - max_wobble_offset, width - max_wobble_offset)
+        self.__reference_ellipse = VMobject()
+        self.__reference_ellipse.set_points_smoothly(ellipse_points)
+        self.__reference_ellipse.set_opacity(0)
         
         self.membrane = Membrane(
-            cell=self, 
+            reference_ellipse=self.__reference_ellipse,
             num_waves=num_waves,
+            max_wobble_offset=max_wobble_offset,
             wobble_frequency=wobble_frequency,
             )
         
+        # Create Nucleus - This is the neural network inside the cell
+        self.nucleus = Nucleus(
+            cell_width = width,
+            cell_height = height,
+            genes=genes,
+            )
+        
+        self.fitness_range = (-500, -283) 
+        self.fitness = DecimalNumber(0, num_decimal_places=0, font_size=60, fill_opacity=0)
+        self.fitness.rotate(PI/2, about_point=self.fitness.get_center())
+        self.fitness.move_to((0, 0, 0))
+        self.update_fitness(fitness)
+
         super().__init__(
-            self.nucleus,
+            self.__reference_ellipse,
             self.membrane,
-            self.reference_ellipse,
+            self.nucleus,
+            self.fitness
         )
 
 
-    def rotate_all(self, angle):
-        self.nucleus.rotation_target = angle
-        self.membrane.rotation_target = angle
-        self.rotate(angle)
+    def update_fitness(self, new_fitness):
+        self.fitness.set_value(new_fitness).rotate(PI/2, about_point=self.fitness.get_center())  # Rotate need to be reapplied
+        fitness_evaluation = new_fitness / (self.fitness_range[1] - self.fitness_range[0])
+        self.fitness.set_fill(color=ManimColor(RED).interpolate(GREEN, fitness_evaluation))
+
+    def _create_ellipse_points(self, height, width):
+        points = []
+        for i in range(200):
+            angle = 2 * np.pi * i / 200
+            x = width / 2 * np.cos(angle)
+            y = height / 2 * np.sin(angle)
+            points.append([x, y, 0])
+
+        points.append(points[0])  # close the circle
+        return points
+        
