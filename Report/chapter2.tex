@@ -2,28 +2,226 @@
 \label{chapter:2}
 
 \section{Grundlagen von NEAT}
-(2 Seiten)
----- Historisches Wachsen von genetischen Algos - erste ML powered Chatbots, Neuronale Netze, Supervised Learning, Big Data und am Ende das unsupervised deep-learning mit sich selbst adjustierenden Gewichte. Darauf basierend im nächsten Schritt modellierung natürlichen Verhaltens durch genetik. 
----- Bestandteile, N=Neuro-NeuronaleNetze, E=Evolution-Mutation, Crossover, Selection, A=Augmenting- kleinstes NN am Anfang-falls zu schlecht mehr komplexität, T=Topology-Anzahl an Neuronen und Layer sowie Aufbau dessen. Phenotype (ein neuronales Netz), Genotype (ein gewisses Genset), Speciation. Ein Genom mit mehreren Genen, entweder Knoten, oder Kanten-gen. Kantengene haben Innovationsnummern-beschreibt wann eine Kante kreiert wurde, diese werden über alle Netzwerke hinweg gleich sein-wenn ein Netzwerk eine neue Kante erstellt die keine vorheriges hatte bekommt das eine hohe Innovationsnummer. Falls die woanders schon existiert wird die Nummer von der Kante reduziert-Grundlage für gutes Crossover-das passiert nur auf Kantengene, da die Knotengene von dieses abgeleitet werden können-eine Knotenkanten klasse besitzt typischerweise fünf Attribute: 1. Innovationsnummer, 2. Ursprungsknoten, 3. Endknoten, 4. Gewicht, 5. IstAktiv. Ein Knoten hat zwei Attribute: 1. Knotennummer und 2. Knotentyp (Sensor, Hidden, Output) Unterscheidung von excess (am Ende, werden nur vererbt wenn das Elternteil höhere Scores trifft) und disjoint gene (werden immer vererbt und gemerged). DAS WARS ZU CROSSOVER. Fünf Mutations typen, entweder eine Verbindung mutieren das heißt eine neue Verbindung mit dem Gewicht zwischen [-2;2], zweitens man fügt einen Knoten irgendwo dazu auf eine zufällige Verbindung, vorherige Verbidnung behält ihren Wert, die neue Verbindung bekommt Gewicht 1. Drittens eine Verbindung aktivieren, oder deaktivieren. Viertens die Gewichtsverschiebung, multipliziert ein zufälliges Gewicht mit einer Nummer zwischen [0;2]. Fünftens die Gewichtsneusetzung, komplett neues Gewicht zwischen [-2;2]. ENDE MUTATION. Selektion: Unterschiedliche Genome und jedes davon hat einen bestimmten Score in der Simulation erreicht. Speziefizierung  der Genome-Wenn die Distanz zweier Genome unterhalb einer gewissen Grenze ist, gruppiert man diese in eine Spezies - geht nicht um den Score sondern um die Gewichte, wenige Excess und Disjoint Gene. Falls die Distanz zu groß ist und es keine Spezies dafür gibt, erstellt man eine neue Spezies startend mit diesem Genom. Sortieren der Genome innerhalb der einzelnen Spezien basierend auf ihrem Score, absteigend. Dann selektiert man basierend auf einem Schwellenwert eine gewisse Anzahl an Genomen aus jeder Spezie (häufig 50\%) und vernachlässigt alle restlichen im weiteren Programmablauf. Auch sehr schlechte Genome können diesen Prozess durchstehen, da Sie in einer kleinen Spezie sind. Das garantiert Innovation auf der Topologie Ebene, welches durch kleiner Mutationen vielleicht noch wesentlich besser werden könnte. (Grafik zum Grundlegenden Konzept von NEAT)
+-- Probelesen TODO @AMOS
+\textbf{Historische Entwicklung genetischer Algorithmen}
 
-\section{Grundlagen von simplen Computerspielen}
-(1 Seiten)
----- Historische Bedeutung von Computerspielen (hohe gesellschaftliche Durchdringung von Spielen egal ob Militär oder Familie, Kowmpetitv aber begrenzt, zuerst Brettspiele dann Computer, soziales Tun, Vorfornt in der Analyse von menschlichen psychologischen Verhalten)
----- Bestandteile (variierende Umgebung, neue Input Reize, ein Ziel, z.B. Highscore oder Überleben, häufig Kompetitv, Spieler steuert einen Agenten in einer simplifizierten Welt, visuell häufig ausgeklügelt aber nicht ausschlaggebend für gutes Spiel -> Überleitung zu den Grundlagen der Visualisierung)
+Die Entwicklung genetischer Algorithmen ist eng verbunden mit dem Aufkommen und der Evolution des maschinellen Lernens. Beginnend mit den ersten, durch maschinelles Lernen betriebenen Chatbots, erstreckt sich diese Entwicklung über die Fortschritte in neuronalen Netzen, Supervised Learning, Big Data, bis hin zu den neuesten Errungenschaften im Bereich des unsupervised Deep Learning mit selbstadjustierenden Gewichten. Aus diesen Entwicklungen resultierte der nächste Schritt: die Modellierung natürlichen Verhaltens durch Genetik.
 
-\section{Grundlagen zum Thema Visualisierung}
-(2 Seiten)
----- Ganz Basic warum Visualisierung -> weil leicht konsumierbar von Menschen, häufig leichter verständlicher und kompensierter als Text. 
+\textbf{Bestandteile von NEAT}
 
-https://www.frontiersin.org/articles/10.3389/fncir.2015.00051/full
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6091269/
-https://publishup.uni-potsdam.de/opus4-ubp/frontdoor/deliver/index/docId/5047/file/digarec06\_S116\_156.pdf
+NEAT (NeuroEvolution of Augmenting Topologies) umfasst mehrere Schlüsselkomponenten \cite{NEAT}:
+
+\begin{itemize}
+	\item \textbf{Neuronale Netze (N)}: NEAT beginnt mit einem grundlegenden neuronalen Netz und erhöht dessen Komplexität bei Bedarf.
+	\item \textbf{Evolution (E)}: Dies beinhaltet Mechanismen wie Mutation, Crossover und Selektion zur Entwicklung der Netze.
+	\item \textbf{Augmenting (A)}: NEAT startet mit der einfachsten Netzwerkstruktur und fügt Komplexität hinzu, falls die Leistung unzureichend ist.
+	\item \textbf{Topology (T)}: Die Struktur der neuronalen Netze, einschließlich der Anzahl an Neuronen und Layern sowie deren Aufbau, ist ein wesentlicher Bestandteil von NEAT.
+\end{itemize}
+
+In NEAT besteht jedes Genom aus einer Reihe von Genen, die entweder Knoten oder Kanten repräsentieren. Kanten-Gene werden mit Innovationsnummern versehen, die den Zeitpunkt ihrer Entstehung angeben. Diese Nummern bleiben über alle Netzwerke hinweg konsistent.
+
+\textbf{Crossover und Mutation in NEAT}
+
+Der Crossover-Prozess in NEAT fokussiert sich auf die Kantengene, da sich die Knotengene daraus ableiten lassen. Jedes Kantengen hat typischerweise fünf Attribute: Innovationsnummer, Ursprungsknoten, Endknoten, Gewicht und Aktivitätsstatus. Ein Knoten wird durch zwei Attribute definiert: Knotennummer und Knotentyp (Sensor, Hidden, Output).
+
+Es gibt fünf Arten von Mutationen in NEAT:
+\begin{enumerate}
+	\item Erzeugung einer neuen Verbindung mit einem Gewicht zwischen [-2;2].
+	\item Hinzufügen eines Knotens auf einer zufälligen Verbindung, wobei die bestehende Verbindung erhalten bleibt und die neue Verbindung ein Gewicht von 1 erhält.
+	\item Aktivieren oder Deaktivieren einer Verbindung.
+	\item Gewichtsverschiebung durch Multiplikation eines zufälligen Gewichts mit einer Zahl zwischen [0;2].
+	\item Gewichtsneusetzung mit einem neuen Wert zwischen [-2;2].
+\end{enumerate}
+
+\textbf{Selektion und Speziation in NEAT}
+
+Die Selektion in NEAT basiert auf dem Simulationsscore verschiedener Genome. Bei der Speziation werden Genome basierend auf ihrer genetischen Distanz in Spezies gruppiert. Genome, deren Distanz unter einer bestimmten Schwelle liegt, werden in eine Spezies gruppiert. Ist die Distanz zu groß und existiert keine passende Spezies, wird eine neue mit dem entsprechenden Genom als Basis gebildet. Innerhalb der Spezien werden Genome nach ihrem Score sortiert und ein Anteil (oft 50\%) für die nächste Generation ausgewählt. Selbst Genome mit niedrigerem Score können diesen Prozess überstehen, insbesondere wenn sie zu einer kleineren Spezies gehören. Dies fördert die Innovation auf der Topologie-Ebene und ermöglicht die Evolution von Netzwerken durch kleinere Mutationen. 
 
 
----- Psychologische Effekte von Visualisierung (vgl. Text/Bild/Videos) in spielen, dann verallgemeinert auch beim lernen, leichteres lernen? schnelleres lernen? (Grafik zum biologischen sehen) 
----- Neuster Stand bei visuellen Effekten und Erkenntnisse, Mikroanimationen, Zerlegung komplexer Themen in Videos - Bewegtbildproduktionen. Trend zu immer kürzeren Videos und schnellere Schnittfolge um Aufmerksamkeit zu bewahren. Finder Anklang auch in der Wissenschaft, leichtere Vermittlung komplexer Inhalte an viele Zuhörer - mehr Wissensvideos zum Beispiel auch im Informatik/Mathematik und Biologie Bereich. 
+\section{Grundlagen von Computerspielen}
 
-"Eine ausreichende Lernzeit scheint sich
-demzufolge verstehensförderlich auszuwirken." (S. 122 d-nb.info)
-Visualisierungen erhöhen den Lernerfolg und reduzieren die mentale Belastungen bei dem Verständnis von wissenschaftlichen Texten. (vgl. S. 118 d-nb.info)
-Zudem reduzieren Videos die mentale Belastung im Vergleich zu statischen Bildern beim Verständnis neuer Konzepte. (vgl. S. 324 hbz-nrw.de)
+\textbf{Historische Bedeutung und Entwicklung}
+
+Die historische Entwicklung von Computerspielen ist eng mit den technologischen Fortschritten und gesellschaftlichen Veränderungen verbunden. Ihren Ursprung finden Computerspiele in den frühen Experimenten an Universitäten in den 1950er Jahren, die sich zu einer bedeutenden Unterhaltungsform in der digitalen Ära entwickelt haben. Diese Spiele, anfänglich Teil von wissenschaftlichen Versuchen, wurden bald zu einem kulturellen Phänomen, das von militärischer Simulation bis hin zur familiären Unterhaltung reicht. Die gesellschaftliche Durchdringung von Computerspielen spiegelt ihre Bedeutung in der Analyse menschlichen Verhaltens wider \cite{Huizinga1939}.
+
+\textbf{Charakteristika von Computerspielen}
+
+Computerspiele zeichnen sich durch mehrere grundlegende Charakteristika aus. Sie bieten eine interaktive Umgebung, in der Spieler auf variierende Herausforderungen und Szenarien reagieren. Die Spiele definieren spezifische Ziele, sei es das Erreichen eines Highscores oder das Überleben in einer virtuellen Welt. Wettbewerb und Kooperation sind zentrale Aspekte, wobei Spieler oft gegen computergesteuerte Gegner oder in einem Mehrspielermodus antreten. Die Steuerung von Agenten, seien es Charaktere oder Objekte, in einer meist simplifizierten Welt ist ein weiteres Merkmal. Die visuelle Gestaltung der Spiele reicht von einfachen Grafiken bis hin zu komplexen 3D-Welten, wobei die visuelle Qualität nicht immer ausschlaggebend für den Erfolg eines Spiels ist.
+
+\textbf{Rolle der Visualisierung}
+
+Die Visualisierung in Computerspielen geht über die ästhetische Komponente hinaus und ist integraler Bestandteil des Spielerlebnisses. Sie ermöglicht es, komplexe Welten darzustellen, Geschichten zu erzählen und emotionale Reaktionen zu evozieren. Mit der Weiterentwicklung der Grafiktechnologien haben sich die Darstellungsmöglichkeiten in Spielen erweitert und reichen von einfachen Pixelgrafiken bis hin zu realistischen 3D-Umgebungen \cite{COMP}.
+
+\textbf{Zukunftsperspektiven}
+
+Die Zukunft von Computerspielen ist vielversprechend und wird durch die Entwicklung neuer Technologien wie Virtual und Augmented Reality, Cloud-Gaming und künstliche Intelligenz geprägt. Diese Entwicklungen deuten auf eine Ära hin, in der die Grenzen zwischen Realität und virtueller Welt zunehmend verschwimmen und neue Formen des Spielens möglich werden.
+
+
+\section{Grundlagen zu Visualisierungen}
+
+\textbf{Geschichte der Visualisierung}
+
+Die Geschichte der Visualisierung begann in der zweiten Hälfte des 19. Jahrhunderts, als technologische Fortschritte, insbesondere in der Fotografie, neue Möglichkeiten eröffneten. Diese Entwicklung wird oft als ein wichtiger Wendepunkt in der visuellen Darstellung gesehen. Im Laufe der Zeit entwickelte sich auch die Fähigkeit, Bilder und visuelle Inhalte zu verstehen und zu interpretieren, bekannt als visuelle Alphabetisierung. Diese Fähigkeit ist nicht auf einen bestimmten Forschungsbereich beschränkt und hat kein festes Ziel. Sie ist vielmehr wichtig, um zu verstehen, wie wir visuelle Informationen wahrnehmen und wie diese in unserem sozialen Umfeld funktionieren \cite{Simunek2009}.
+
+Bereits 1969 wies John Deebs auf die Bedeutung der visuellen Alphabetisierung hin. Er betonte die Wichtigkeit, visuelle Darstellungen und den Prozess des Sehens zu studieren, und forderte eine Zusammenarbeit über verschiedene Disziplinen hinweg, um die visuelle Kultur besser zu verstehen. Die visuelle Alphabetisierung hat viele verschiedene Definitionen, die je nach Fachgebiet variieren. Die International Visual Literacy Association definiert sie als einen interdisziplinären Ansatz, um den Prozess der visuellen Kommunikation zu verstehen und die dafür notwendigen Kenntnisse, Fähigkeiten und Kompetenzen zu erlernen \cite{Wiebe2001}.
+
+\textbf{Visuelle Wahrnehmung}
+
+Visuelle Wahrnehmung und die Verarbeitung visueller Informationen sind wichtige Elemente im Bildungsbereich. Es geht dabei nicht nur um das Verstehen wissenschaftlicher Konzepte, sondern auch um die Fähigkeit, diese Konzepte in neuen Zusammenhängen anzuwenden. Visualisierungen spielen eine große Rolle bei kognitiven Aktivitäten und beim Lernen. Sie ermöglichen es, wissenschaftliche Inhalte auf eine neue Weise zu betrachten und zu verstehen \cite{Wiebe2001}.
+
+Visualisierung wird oft auch als \enquote{mentales Bild} oder \enquote{mentale Darstellung} bezeichnet. Diese mentalen Bilder helfen Schülern, komplexe wissenschaftliche Konzepte besser zu erfassen und zu verinnerlichen. Die grafische Darstellung, also die Verwendung von Bildern und Diagrammen, ist ein wichtiger Schritt, um diese Konzepte zugänglich und verständlich zu machen. Sie erleichtert das Verständnis verschiedener Wahrnehmungen der Realität und fördert den Lernprozess \cite{Duval1999}.
+
+Die Visualisierung soll gesprochene Worte nicht immer ersetzen, sondern vielmehr darauf abzielen, die Aufmerksamkeit der Zuhörenden auf das Wesentliche des Dargebotenen zu lenken und das Verständnis der präsentierten Informationen zu verbessern, sowie den Zugang zum Kern der Inhalte zu erleichtern \cite{Gilbert2005}.
+
+Kreativität ist der Schlüssel zur Visualisierung und steigert die Effizienz erheblich. Sie sollte sich vor allem auf drei Aspekte konzentrieren:
+\begin{itemize}
+	\item Die Planung der Visualisierung.
+	\item Die Grundpunkte der geplanten Visualisierung.
+	\item Die Kompositionsregeln der Visualisierung.
+\end{itemize}
+
+Bei der Planung sind vor allem Antworten auf die folgenden Fragen wichtig:
+\begin{itemize}
+	\item Was möchte ich darstellen?
+	\item Was ist das Ziel der vorbereiteten Präsentation?
+	\item Wen möchte ich erreichen oder überzeugen?
+\end{itemize}
+
+\textbf{Visuelle Materialien als Bildungswerkzeug}
+
+Bildmaterialien dienen als multifunktionale Instrumente im Lernprozess, die komplexe Sachverhalte visuell veranschaulichen. Sie lassen sich in Kategorien wie direkte Darstellungen – Fotos, Bilder, Diagramme – und dynamische Medien – Diashows, Filme – einteilen. Während Fotos die Realität detailgenau wiedergeben können, besteht die Gefahr, dass sie mit irrelevanten Details überladen und somit ablenkend wirken \cite{Vermirovsky2010ImportanceVisualisation}. 
+
+In Bildungsmaterialien eingesetzte Bilder erfüllen unterschiedliche Funktionen:
+
+\begin{itemize}
+	\item Dekorative Bilder steigern die ästhetische Anziehungskraft und füllen leere Flächen.
+	\item Darstellende Bilder illustrieren Inhalte direkt und unterstützen die Informationsvermittlung.
+	\item Organisierende Bilder tragen zur Strukturierung komplexer Themen bei.
+	\item Interpretierende Bilder liefern Erklärungen und fördern das Verständnis der Lerninhalte.
+	\item Transformierende Bilder ändern die Betrachtungsweise und vertiefen das Verständnis.
+\end{itemize}
+
+Symbole spielen eine signifikante Rolle, indem sie Objekte und Phänomene kennzeichnen und die Kommunikation über Sprachgrenzen hinweg erleichtern.
+
+Die Zielsetzung und die anvisierte Zielgruppe sind bei der Auswahl und Gestaltung von Bildmaterialien wesentlich. Eine strategische Auswahl kann die Verständlichkeit und Erinnerung der Lerninhalte verbessern \cite{Bilek2007}.
+
+Visuelle Informationen variieren weitgehend und umfassen:
+
+\begin{itemize}
+	\item Informativ: Klare und eindeutige Darstellungen wie Piktogramme.
+	\item Wissenschaftlich: Fachspezifische Bilder, darunter Röntgenbilder oder geowissenschaftliche Visualisierungen.
+	\item Medial: Bilder aus Werbung und Film, die emotionale Reaktionen hervorrufen oder überzeugen sollen.
+\end{itemize}
+
+Die Kategorisierung unterstützt die Erkennung der Vielfalt und des Einflusses von Bildmaterialien im Lernkontext und fördert einen bewussten Einsatz zur Bereicherung und Vertiefung des Lernprozesses.
+
+\textbf{Elemente der Visualisierung und Computerpräsentationen}
+
+Elemente der Visualisierung und Computerpräsentationen sind wesentliche Werkzeuge in Lernumgebungen, die Inhalte auf eine klar strukturierte Weise kommunizieren \cite{Bilek2007}. Bei der Erstellung von Visualisierungen sollten folgende Punkte beachtet werden:
+
+\begin{itemize}
+	\item Die Auswahl der Präsentationsmedien und Gestaltungselemente muss den Inhalt adäquat reflektieren.
+	\item Lesbarkeit ist entscheidend, wobei einfache Schriftarten wie Arial oder Calibri zu bevorzugen sind.
+	\item Die kulturellen Lesegewohnheiten sind zu respektieren, insbesondere das Lesen von links nach rechts sowie die korrekte Anwendung von Groß- und Kleinschreibung.
+	\item Das Layout und die Ausrichtung des Textes, einschließlich Textumrandungen und Hervorhebungen, verbessern die Übersichtlichkeit.
+	\item Der Einsatz von Farben sollte wohlüberlegt sein, um Kontraste zu schaffen und symbolische Bedeutungen zu nutzen.
+\end{itemize}
+
+Zur Darstellung von Daten sind verschiedene Diagrammtypen verfügbar:
+
+\begin{itemize}
+	\item Listen und Tabellen bieten eine strukturierte Übersicht.
+	\item Kurven- und Balkendiagramme visualisieren Datenverläufe und Vergleiche.
+	\item Kreis- und Tortendiagramme zeigen Anteile und Proportionen.
+	\item Organigramme und Flussdiagramme verdeutlichen Strukturen und Prozesse.
+\end{itemize}
+
+Die korrekte Interpretation der Daten in diesen Diagrammen ist für das Verständnis von wissenschaftlichen Zusammenhängen unerlässlich. Schwierigkeiten, wie die Unterscheidung zwischen x- und y-Achse, müssen adressiert werden \cite{Happonen2011}.
+
+Die Anordnung der Präsentationselemente folgt einer spezifischen Komposition, die auf Symmetrie, Übertragung, Rhythmus und Dynamik basiert. Vorlagen in Präsentationsprogrammen können hierbei als Hilfsmittel dienen, um ein konsistentes und logisches Layout zu gewährleisten.
+
+Beim Einsatz grafischer Elemente ist es von Bedeutung, dass diese das Wesentliche nicht überlagern. Multimedia-Präsentationen sollten ergänzend verwendet werden, wenn physische Objekte nicht verfügbar sind \cite{Urbanova2008}.
+
+In der Gestaltung von Lernmaterialien durch Computerpräsentationen wird eine Balance zwischen Informationsvermittlung, Motivation und Anpassung an individuelle Lerngeschwindigkeiten angestrebt \cite{Vermirovsky2010}.
+
+\textbf{Zukunftsperspektiven}
+
+Die Zukunft der Visualisierung deutet auf eine verstärkte Integration von virtueller und physischer Realität hin, die neue Wege für immersive Lern- und Erfahrungsräume eröffnet. Diese technologischen Fortschritte versprechen eine tiefere Einbindung und Verständnisförderung in Bildung und Präsentation \cite{Vermirovsky2010ImportanceVisualisation}.
+
+
+%People use visualizations to make large-scale decisions, such as whether to evacuate a town before a hurricane strike, and more personal decisions, such as which medical treatment to undergo. Given their widespread use and social impact, researchers in many domains, including cognitive psychology, information visualization, and medical decision making, study how we make decisions with visualizations. Even though researchers continue to develop a wealth of knowledge on decision making with visualizations, there are obstacles for scientists interested in integrating findings from other domains
+%
+%https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6091269/
+%
+%\textbf{Neurobiologie der Informationsverarbeitung}
+%
+%Die Informationsverarbeitung erfolgt immer durch einen initialen Reiz auf einer unserer Nervenrezeptoren. Darauffolgend gilt es diese abstrakten Daten in den Kontext zu setzten und daraus eine Handlung abzuleiten. Ein Beispiel dafür ist das Anfassen einer heißen Herdplatte. Dabei ist der initilae Reiz die Hitzesensoren unserer Haut welche ein starkes Signal senden. Daraufhin verarbeitet das Gehirn diesen Reiz und gleicht gegebenefalls nochmals mit den Augen ab, ob das korrekt sein kann. Anschließend wird die Hand weggezogen und ein lauter Schrei als Handlung ausgeführt.
+%
+%Hierfür gibt es eine viel zahl an psychologischen Modellen, die dieses Verhalten generalisieren möchten. z.B. Behaviorismus, Mehrspeichermodell welche die Informationsverarbeitung auf unterschiedlichen Ebenen versuchen zu generalisieren.  Sie alle gelten jedoch nicht als vollständig akkurat und sollten kritisch betrachtet werden. \cite{TUD-V1} Die zentralen und offenen Forschungsfragen der Gedächtnisforschung gelten hierbei grundlegenden Systeme, Repräsentationen, Prozesse und das Neurobiologische Substrat ab. \cite[S. 69]{TUD-VL01}
+%
+%https://tu-dresden.de/mn/psychologie/ifap/allgpsy/ressourcen/dateien/lehre/lehreveranstaltungen/goschke\_lehre/ws\_2013/vl\_gedaechtnis/V-Mehrspeichermodell.pdf?lang=de
+%
+%Weitestgehender Konsens besteht allerdings im Beginn des Prozesses der Informationsverarbeitung, welcher häufig mit den sensorischen Rezeptoren des Menschen, welche die Umgebung in elektrochemische Signale umwandelt beginnt. Diese Umwandlung, bekannt als sensorische Transduktion, erfolgt, wenn ein Stimulus von einem Rezeptor erkannt wird, der ein graduiertes Potential in einem sensorischen Neuron erzeugt. Wenn dieses Potential stark genug ist, erzeugt das sensorische Neuron ein Aktionspotential, das ins zentrale Nervensystem weitergeleitet wird, wo es mit anderen sensorischen Informationen integriert wird, um eine bewusste Wahrnehmung dieses Stimulus zu ermöglichen und eine Handlung auszuführen \cite{OREG}. 
+%
+%https://open.oregonstate.education/aandp/chapter/13-1-sensory-receptors/
+%
+%Hierbei agieren die acht menschlichen Sinne als unterschiedlich spezialisierte, sensorischen, Rezeptoren für die jeweils eine separate Transduktion erfolgt, welche es gilt zusammenzuführen. Dafür maßgeblich verantwortlich ist das limbische System, insbesondere der Hippocampus und die Amygdala. Diese spielen eine zentrale Rolle bei der Bewertung und Speicherung von Informationen. Es vergleicht eingehende sensorische Daten mit vorhandenem Wissen und Emotionen, was entscheidend für eine Handlung und die darauf folgende Gedächtnisbildung ist \cite[S.18-20]{UNI-WUE}.
+%
+%\textbf{Lernen im Kontext der Informationsverarbeitung}
+%
+%Der Prozess der Informationsverarbeitung ist per se statisch so folgt im Normalfall auf den selben Reiz die selbe Handlung. Bezogen auf das Beispiel der heißen Herdplatte wäre es allerdings ungünstig, das selbe Verhalten zu wiederholen, nachdem gerade auf die heiße Platte gefasst wurde. Um dem zu entgegnen ist der Mensch in der Lage zu Lernen und entsprechend dem Ergebnis seiner Handlung, langfristige Verhaltensänderungen für folgende Handlungen zu erzielen.
+%
+%Die Gedächtnisbildung auch genannte Lernen, bezeichnet Prozesse die dem erfahrungsabhängigen Erwerb von Wissen oder Fertigkeiten sowie der Veränderung von Verhaltendsdispositonen zugrunde ligen. Dispositonen beschreiben hierbei ...
+%Darauf aufbauen bezeichnet das Gedächtnis selbst die Ergebnisse des Lernens wie zum Beispiel Erinnerungen, Wissen und Fertigkeiten. 
+%Abgrenzung erfahren diese beiden Gebiete von Dingen wie Verhaltensveränderung die nicht auf das Lernen zurückzuführen sind (Drogen), aber auch der genetische angelegte Veränderungsprozess des Nervensystems namens Reifung und zuletzt auch die Prägung von instinktiven Verhalten durch Ereignissen in kritischen Lebensphasen.\cite[S. 16-18]{TUD-VL01}
+%
+%tps://tu-dresden.de/mn/psychologie/ifap/allgpsy/ressourcen/dateien/lehre/lehreveranstaltungen/goschke\_lehre/ws2014/ppt\_lernen\_ged2014/VL01-Einfuehrung.pdf?lang=en
+%
+%Aus neurobiologischer Perspektive bedeutet Lernen einen ständigen Aufbau
+%von Neuronenpopulationen im Cortex. Jedes Neugeborene kommt mit ca.
+%100 Milliarden Neuronen auf die Welt. Diese sind jedoch nur sehr lose
+%miteinander verknüpft. Im ersten Lebensjahr vergrößert das Baby seine
+%Gehirnmasse von ca. 250 g auf 750 g. Dies geschieht nur dadurch, dass das
+%Baby “lernt“. Es entstehen feste Verbindungen zwischen den Neuronen,
+%sodass es zu Neuronenpopulationen kommt.
+%Gegenstand der Betrachtung sind die Stoffwechselprozesse im Gehirn sowie
+%die Wirkungsweise der Botenstoffe (Neurotransmitter). Hierdurch werden
+%bekannte Vorgehensweisen (Handlungsorientierung, positives Feedback,
+%Wechsel der Sozialformen, Prinzip der Wiederholung …) bestätigt und neue
+%Erkenntnisse gewonnen. \cite[S. 3]{UNI-WUE}
+%
+%https://www.uni-wuerzburg.de/fileadmin/43060000/04\_Fort-\_und\_Weiterbildungen\_Lehrkraefte/Herbsttagungen/Herbsttagung\_2016/20161006\_WS\_04\_Neurobiologie.pdf
+%
+%Darauf basierend stellt sich die naheliegende Frage, welche von diesen Sinnen den größten Einfluss auf die am Ende wahrgenommene Situation und ausgeführte Handlung hat. 
+%
+%
+%\textbf{Visualisierungen im Lernkontext}
+%
+%Die Rolle der Visualisierung im Lernprozess, ist durch die Fähigkeit geprägt, komplexe Informationen zugänglich und verständlich zu machen.
+%Visualisierungen erhöhen den Lernerfolg und reduzieren die mentale Belastungen bei dem Verständnis von wissenschaftlichen Texten.\cite[vg. S. 118]{DNB}
+%Zudem reduzieren Videos die mentale Belastung im Vergleich zu statischen Bildern beim Verständnis neuer Konzepte.\cite[vg. S. 324]{HBZ} 
+%Visualisierung bezeichnet die visuelle Repräsentation von Informationen in Form von Grafiken. Sie werden benutzt um zuvor abstrakte Informationen in ein leichter verdauliches und verständlicheres Medium umzuwandeln, welches im Rückschluss eine leichtere Verständlichkeit aufgrund der erhöhten kognitiven Aufmerksamkeit bietet. Der Grund warum Visualisierungen im Kontext des Lernen gut funktionieren liegt 
+%
+%https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6091269/
+%
+%Visualisierungen sind besonders effektiv im Lernprozess, da sie verschiedene kognitive Ebenen stimulieren und so das Verständnis fördern. Sie ermöglichen eine tiefere und umfassendere Verarbeitung von Informationen, indem sie komplexe Konzepte in einer zugänglichen und intuitiven Form darstellen. Dies ist besonders wichtig, da die Neurobiologie des Lernens betont, wie entscheidend es ist, Lerninhalte in einer Weise zu präsentieren, die mit der Funktionsweise des menschlichen Gehirns harmoniert \cite{UllmannMentalRepresentation}.
+%
+%\textbf{Integration verschiedener Sinnesreize}
+%
+%Interessant ist der Vergleich der Verarbeitungskapazitäten zwischen visuellen und auditiven Rezeptoren. Die Integration auditiver Stimuli kann die sensorische Kodierung in den Dendriten von Pyramidenzellen im somatosensorischen Cortex verstärken, was die Verarbeitung von Berührungsreizen beeinflusst \cite{NatureCommunications}. Diese multisensorische Integration unterstreicht die Fähigkeit des Gehirns, Informationen aus verschiedenen sensorischen Pfaden effizient zu verarbeiten.
+%
+%\textbf{Forschungsperspektiven und Zukunft der Visualisierung}
+%
+%Die Forschung in den Neurowissenschaften, insbesondere die simultanen Aufzeichnungen von Neuronenpopulationen, bietet wertvolle Einblicke in die Varianz der neuronalen Antworten. Solche Erkenntnisse sind entscheidend für das Verständnis, wie das Gehirn lernt und Informationen verarbeitet \cite{FrontiersInNeuroscience}. Zukünftige Forschungen und Entwicklungen im Bereich der Visualisierung versprechen, die Effektivität des Lernens weiter zu steigern, indem sie noch stärker auf die neurobiologischen Grundlagen des Lernens abgestimmt werden.
+%
+%https://depot.ceon.pl/bitstream/handle/123456789/14480/36%20The%20Importance%20of%20Visualisation.pdf?sequence=1
+%
+%---- Ganz Basic warum Visualisierung -> weil leicht konsumierbar von Menschen, häufig leichter verständlicher und kompensierter als Text. 
+
+
+
+
+
+
+
+
