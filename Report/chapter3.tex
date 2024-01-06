@@ -2,35 +2,34 @@
 \chapter{Praktische Ausarbeitung}
 \label{chapter:3}
 \section{Projektbeschreibung}
-Basierend auf der Faszination für die Modellierung natürlicher Ereignisse in Computer gesteuerten Systemen, ist das Ziel des Projektes basierend auf dem NEAT Algorithmus einen Agenten in einem Computerspiel zu steuern, welcher durch reinforcement learning und selektion in der Lage ist, dieses sehr gut zu spielen.
+Basierend auf der Faszination für die Modellierung natürlicher Ereignisse in Computer gesteuerten Systemen, ist das Ziel des Projektes, basierend auf dem NEAT Algorithmus, einen Agenten zu konzipieren um ein Computerspiel zu meistern.
 
-Als Spiel wurde sich an einem Standard Projekt des Gymnasium (gym) Paketes bedient. Das Python-Paket gym ist eine Open-Source-Bibliothek, die von OpenAI entwickelt wurde und eine Sammlung von standardisierten Umgebungen für die Entwicklung und das Testen von Algorithmen im Bereich des Reinforcement Learning (RL) bietet. gym zielt darauf ab, die Entwicklung und Vergleichbarkeit von RL-Algorithmen zu erleichtern, indem es eine einheitliche Schnittstelle für verschiedene Arten von Umgebungen bereitstellt. Als Teil dieses Paketes gibt es zahlreiche Demo Umgebungen wie zum Beispiel alle Atari Spiele. 
+Als Spiel wurde sich an einem Standard Projekt der Gymnasium (gym) Bibliothek \cite{gymnasiumbib} bedient. Das Python-Paket gym ist eine Open-Source-Bibliothek, die von OpenAI entwickelt wurde und eine Sammlung von standardisierten Umgebungen für die Entwicklung und das Testen von Algorithmen im Bereich des Reinforcement Learning (RL) bietet. Gym zielt darauf ab, die Entwicklung und Vergleichbarkeit von RL-Algorithmen zu erleichtern, indem es eine einheitliche Schnittstelle für verschiedene Arten von Umgebungen bereitstellt. Da mit dem NEAT Algorithmus Aufgaben aus dem Bereich RL erlernt werden können, kann die Biblithek anwendung finden. Teil des Paketes sind es zahlreiche Simulationsumgebungen, wie beispielsweie alle Atari Spiele. 
 
-Eins dieser Spiele heißt \enquote{Lunar Lander} und zeichnet sich durch das einfach Ziel, als auch die einfachen Werkzeuge zur Zielerreichung aus. Inhalt des Spiels ist es einen Raketen Flugpfad bei der Landung so zu ändern, sodass diese genau in einem markierten Bereich landet. Als Leistungskriterium wird dabei die finale Distanz zwischen der Rakete und des Mittelpunkt des markierten Bereich gemessen. Zur Erreichung dieses Ziels ist der Agent mit vier möglichen Aktionen ausgestattet, entweder soll er nichts tun, oder das linke Triebwerk aktivieren, oder das rechte Triebwerk aktivieren und als letztes das Haupttriebwerk aktivieren.
+Eines der Spiele, \enquote{Lunar Lander}, zeichnet sich durch das einfach Ziel, als auch die einfachen Werkzeuge zur Zielerreichung aus. Inhalt des Spiels ist es, einen Mondlander sicher auf der Mondoberfläche, in einem markierten bereich zu landen. Die Leistungskriterien sind hierbei, wie waagrecht der Lander beim Anflug ist, wieviel Treibstoff verbraucht wird, und ob der Lander in der richtigen Orientierung sicher im Zielbereich gelandet werden kann. Zur Erreichung dieses Ziels kann der Lander mit zwei linearen Signalen $a$ und $b$ die Leistung des Haupttriebwerks, und der Seitentriebwerke bestimmen. Das Haupttriebwerk feuert bei $a>0,5$ mit einer bis zu $a=1$ proportional steigenden Intensität. Ähnlich feueren jeweils das linke oder rechte Triebwerk bei $-1\leq b<-0,5$ und $1 \geq b>0,5$.
 
-Ziel des technischen Teil des Projektes ist es also ein neuronales Netz so zu trainieren, dass basierend auf der relativen Position der Rakete die Triebwerke so aktiviert und deaktiviert werden, dass dieser möglichst nah an, oder auf der Endmarkierung landet. 
+Ziel des technischen Teil des Projektes ist es also ein Konfiguration für ein neuronales Netz zu finden, sodass basierend auf der relativen Position des Landers die Triebwerke so aktiviert und deaktiviert werden, dass dieser möglichst waagrecht, mit geringem Treibstoffverbrauch innerhalb des Zieles landet. 
 
-Daran anschließend soll ein Erklärvideo zu diesem Thema konzipiert und erstellt werden.
+Daran anküpfend wird ein Video konzipiert und erstellt, welches des NEAT Algorithmus erklärt und am Beispiel des Lunar Landers illustriert.
 
 \section{Implementierungskonzept}
-Für die Implementierung dieses Projektes wurde aufgrund der Data Science Affinität die Programmiersprache Python gewählt. In dieser wurden mithilfe von Jupyter Notebooks die einzelnen Komponenten des NEAT Algorithmus, als auch die Integration des Algorithmus mit dem Spiel umgesetzt. 
+Für die Implementierung dieses Projektes wurde die Programmiersprache Python gewählt. In dieser wurden die einzelnen Komponenten des NEAT Algorithmus, als auch die Integration des Algorithmus mit dem Spiel,  umgesetzt. Die nötige Simulationsumgebung des Spiels stellt die Bibliothek Gymnasium \cite{gymnasiumbib} bereit.
 
 Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewählt:
 \begin{itemize}
-	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden
-	\item Die Rakete soll alleine durch einen abgeleiteten Agenten basierend auf dem NEAT Algorithmus gesteuert werden
-	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden
-	\item Der finale Agent soll in 99\% der Fälle auf der Endmarkierung landen können 
+	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden.
+	\item Der Lander soll alleine durch einen abgeleiteten Agenten basierend auf dem NEAT Algorithmus gesteuert werden
+	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden.
+	\item Der finale Agent soll in 99\% der Fälle innerhalb der Endmarkierungen landen können .
 \end{itemize}
 
 Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
 \begin{itemize}
-	\item Das Spiel soll visuell ansprechend und das Ziel klar ersichtlich sein
-	\item Das Programm soll klar strukturiert und replizierbar ausführbar sein
+	\item Das Programm, die Findung eines optimalen Landers, soll einfach, und replizierbar ausführbar sein.
 \end{itemize}
 
+\textbf{Implementationsdetails.} Die Implementierung des Algorithmus orientiert sich an der originalen Beschreibung \cite{NEAT}. An manchen Stellen wurde die Vorgehensweise der bereits-existierenden Bibliothek Python NEAT \cite{pythonneat} als Vorbild genommen, beispielsweise bei der zufälligen Generierung von Gewichtswerten mittels Normalverteilung, welche in der originalen Beschreibung nicht (Nur im dazugehörigen C++ Code) näher erläutert wird. 
 
----- Implementierung  TODO @AMOS
 
 \section{Visualisierungskonzept}
 
