@@ -2,40 +2,58 @@
 \label{chapter:2}
 
 \section{Grundlagen von NEAT}
--- Probelesen TODO @AMOS
+
 \textbf{Historische Entwicklung genetischer Algorithmen}
 
-Die Entwicklung genetischer Algorithmen ist eng verbunden mit dem Aufkommen und der Evolution des maschinellen Lernens. Beginnend mit den ersten, durch maschinelles Lernen betriebenen Chatbots, erstreckt sich diese Entwicklung über die Fortschritte in neuronalen Netzen, Supervised Learning, Big Data, bis hin zu den neuesten Errungenschaften im Bereich des unsupervised Deep Learning mit selbstadjustierenden Gewichten. Aus diesen Entwicklungen resultierte der nächste Schritt: die Modellierung natürlichen Verhaltens durch Genetik.
+Die Entwicklung genetischer Algorithmen ist eng verbunden mit dem Aufkommen und der Evolution des maschinellen Lernens. Nun übertroffen durch Methoden im Reinforcement Learning, war die Neuroevolution um die Jahrtausendwende ein relevantes Forschungsgebiet. Der Algorithmus wendet das Konzept der Evolution auf Neurale Netzwerke an. Anders als die vorausgegangenen Algorithmen werden nicht nur die Gewichte der Netzwerke optimiert, sondern auch die Netzwerkstruktur. Vorteil der Evolutions-Methodik ist, dass Lösungen für Probleme gefunden werden können, für welche keine Kostenfunktion formuliert werden kann. Der Reward, oder die negativen Kosten werden meist lediglich für einzelne Handlungen der Agenten vergeben. Auf solche Probleme sind Optimierungsverfahren, welche eine Funktion optimiere, nicht anwendbar. 
+Trotz Etablierung des gradienten-basierten Deep Learning, besitzt die Neuroevolution Eigenschaften, welche das Konzept in Zukunft wieder aufleben lassen könnten. Beispielsweise erlaubt sie eine einfache und effiziente Parallelisierung der einzelnen Agentensimulationen und kann somit beliebig skaliert werden \cite{Such2017DeepNG}. 
 
 \textbf{Bestandteile von NEAT}
 
-NEAT (NeuroEvolution of Augmenting Topologies) umfasst mehrere Schlüsselkomponenten \cite{NEAT}:
+NEAT (Neuroevolution of augmenting topologies) umfasst mehrere Schlüsselkomponenten \cite{NEAT}:
 
 \begin{itemize}
-	\item \textbf{Neuronale Netze (N)}: NEAT beginnt mit einem grundlegenden neuronalen Netz und erhöht dessen Komplexität bei Bedarf.
+	\item \textbf{Neural (N)}: NEAT beginnt mit einem grundlegenden neuronalen Netz und erhöht dessen Komplexität bei Bedarf.
 	\item \textbf{Evolution (E)}: Dies beinhaltet Mechanismen wie Mutation, Crossover und Selektion zur Entwicklung der Netze.
-	\item \textbf{Augmenting (A)}: NEAT startet mit der einfachsten Netzwerkstruktur und fügt Komplexität hinzu, falls die Leistung unzureichend ist.
-	\item \textbf{Topology (T)}: Die Struktur der neuronalen Netze, einschließlich der Anzahl an Neuronen und Layern sowie deren Aufbau, ist ein wesentlicher Bestandteil von NEAT.
+	\item \textbf{of augmenting Topologies (AT)}: NEAT startet mit der einfachsten Netzwerkstruktur und fügt dann Komplexität hinzu, wenn diese die Leistung der Netzwerke verbessert. Komplexität wird in Form der Struktur der neuronalen Netze, einschließlich der Anzahl an Neuronen und Layern, sowie den Verbindungen zwischen Layern, ausgedrückt.
 \end{itemize}
 
-In NEAT besteht jedes Genom aus einer Reihe von Genen, die entweder Knoten oder Kanten repräsentieren. Kanten-Gene werden mit Innovationsnummern versehen, die den Zeitpunkt ihrer Entstehung angeben. Diese Nummern bleiben über alle Netzwerke hinweg konsistent.
+In NEAT besteht jedes Genom aus einer Reihe von Knoten- und Kanten-Genen. Wesentlich ist hierbei, dass bei Enstehung jedes Gen eine global einzigartige Innovationsnummer zugewiesen bekommt, welche den Enstehungszeitpunkt angeben. Hierdurch wird eine Eindeutige Vererbung der Gene ermöglicht.
+
+Der Algorithmus wird mit einer bestimmten Anzahl $x$ von Individuen angestoßen. Jedes Individuum ist ein Neurales Netzwerk, definiert durch ein bestimmtes Genom. Anfangs existieren nur die Verbindungen zwischen Input $O^m$ und Output $Y^n$. NEAT kann auf Simulationsaufgaben, wie das erlernen von einfachen Videospielen, angewandt werden. Meist steht der Input als Zustandsvektor für den Zustand des Agenten und der zugehörigen Simulationsumgebung. Basierend auf $O$ errechnet das Neurale Netzwerk die Handlung $Y$, welche in der Simulationumgebung ausgeführt wird. Für bestimmte Zustände der Umgebung oder des Agenten können Belohnungen vergeben werden, welche zur Fitness aufsummiert werden. Ein Agent mit menschenähnlichen Gliedmaßen kann belohnt werden, sobald die Koordinate des Kopfes eine bestimmte Höhe überschreitet, falls die zu bewältigende Aufgabe das Aufstehen aus einer Liegeposition ist. Jedes Genom wird einzeln evaluiert und die zugehörige Fitness dokumentiert.
 
 \textbf{Crossover und Mutation in NEAT}
 
-Der Crossover-Prozess in NEAT fokussiert sich auf die Kantengene, da sich die Knotengene daraus ableiten lassen. Jedes Kantengen hat typischerweise fünf Attribute: Innovationsnummer, Ursprungsknoten, Endknoten, Gewicht und Aktivitätsstatus. Ein Knoten wird durch zwei Attribute definiert: Knotennummer und Knotentyp (Sensor, Hidden, Output).
+Im Crossover-Prozess werden zwei Eltern-Genome kombiniert um ein neues Kind-Genom zu erstellen. Anschließend garantiert eine potenzielle Mutation der Genom-Charakteristika eine Exploration der Topologie und Gewichtswerte um das ideale Genom zu finden. Die Auswahl der Eltern-Genome basiert dabei auf der evaluierten Fitness und wird später erläutert.
 
-Es gibt fünf Arten von Mutationen in NEAT:
+Der Crossover-Prozess fokussiert sich auf Knoten- und Kanten-Gene. Jedes Kantengen hat typischerweise fünf Attribute: Innovationsnummer, Ursprungsknoten, Endknoten, Gewicht und Aktivierungsstatus. Ein Knoten wird durch zwei Attribute definiert: Innovationsnummer und Knotentyp (Sensor, Hidden, Output). Das Kind-Genom erbt die Gene der Eltern-Genome. Hierbei wird ein überlappendes Gen zwischen den beiden Eltern zufällig ausgewählt. Die überschüssigen Gene werden nur vom Elternteil mit der höheren Fitness übernommen. 
+Überschüssige Gene sind solche Gene deren Innovationsnummer über die maximale Innovationsnummer des anderen Genoms hinausreichen.
+
+Es gibt fünf Arten von Mutationen in NEAT, welche das neu-entstandene Genom durchlaufen kann:
 \begin{enumerate}
-	\item Erzeugung einer neuen Verbindung mit einem Gewicht zwischen [-2;2].
-	\item Hinzufügen eines Knotens auf einer zufälligen Verbindung, wobei die bestehende Verbindung erhalten bleibt und die neue Verbindung ein Gewicht von 1 erhält.
+	\item Erzeugung einer neuen Verbindung mit einem Gewicht $w \sim \mathcal{P}$, wobei $\mathcal{P}$ beispielsweise als $\mathcal{N}(0, \sigma^2)$ gewählt wird.
+	\item Teilen einer zufälligen bestehenden Verbindung durch Hinzufügen eines Knotens, wobei die bestehende Verbindung, der erste Teil der Verbindung, erhalten bleibt und die neue Verbindung ein Gewicht von 1 erhält.
 	\item Aktivieren oder Deaktivieren einer Verbindung.
-	\item Gewichtsverschiebung durch Multiplikation eines zufälligen Gewichts mit einer Zahl zwischen [0;2].
-	\item Gewichtsneusetzung mit einem neuen Wert zwischen [-2;2].
+	\item Gewichtsverschiebung eines zufälligen Gewichts durch Addition mit einer Zahl $x \sim \mathcal{Q}$.
+	\item Gewichtsneusetzung durch einen neuen Wert $w \sim \mathcal{P}$.
 \end{enumerate}
 
 \textbf{Selektion und Speziation in NEAT}
 
-Die Selektion in NEAT basiert auf dem Simulationsscore verschiedener Genome. Bei der Speziation werden Genome basierend auf ihrer genetischen Distanz in Spezies gruppiert. Genome, deren Distanz unter einer bestimmten Schwelle liegt, werden in eine Spezies gruppiert. Ist die Distanz zu groß und existiert keine passende Spezies, wird eine neue mit dem entsprechenden Genom als Basis gebildet. Innerhalb der Spezien werden Genome nach ihrem Score sortiert und ein Anteil (oft 50\%) für die nächste Generation ausgewählt. Selbst Genome mit niedrigerem Score können diesen Prozess überstehen, insbesondere wenn sie zu einer kleineren Spezies gehören. Dies fördert die Innovation auf der Topologie-Ebene und ermöglicht die Evolution von Netzwerken durch kleinere Mutationen. 
+\begin{equation}
+\text{d}(\text{G_1, G_2}) = c_1 \cdot \frac{E}{N} + c_2 \cdot \frac{D}{N} + c_3 \cdot \overline{W}
+\label{eq:neatdistance}
+\end{equation}
+
+Bei der Speziation werden Genome basierend auf ihrer genetischen Distanz (Gleichung \ref{eq:neatdistance}) in Spezies gruppiert. Hierbei sind $c_1$, $c_2$ und  $c_3$ Hyperparameter, $E$ die Anzahl der überschüssigen Gene, $D$ die Anzahl der disjunkten Gene und $\overline{W}$ die durchschnittliche Gewichtsdistanz der überlappenden Gene der Genome. Folglich werden Genome, deren Distanz unter einem bestimmten Schwellenwert liegt, in einer Spezies gruppiert. Ist die Distanz zu groß und existiert keine passende Spezies, wird eine neue Spezies, mit dem entsprechenden Genom als Basis gebildet. 
+
+
+Die Selektion in NEAT basiert auf dem Fitnesswert verschiedener Genome. Innerhalb der Spezien werden Genome nach ihrer Fitness sortiert und anteilig, beispielsweise die 20\% mit den höchsten Fitness-Werten, für die Kreuzung zu dem Erstellen der nächsten Generation ausgewählt. 
+
+
+Die Speziation erlaubt es, dass sich in einer Niesche ähnliche Genome weiterentwickeln können, ohne sofort auszusterben, nur weil andere Genom-Variationen in der jetzigen Evaluation eine höhere Fitness erzielt haben. Die Kreuzung von ähnlichen Genomen in einer Niesche führt mit höherer Wahrscheinlichkeit zu funktionierenden Kind-Genomen. Hierdurch kann eine Strukturelle vielfalt bewahrt werden. Dies fördert die Innovation auf der Topologie-Ebene und ermöglicht die Evolution von Netzwerken durch kleinere inkrementelle Mutationen - Drastische Mutationen führen zu neuen Spezies. Die absolut erlaubte Anzahl an Nachkommen pro Spezies wird durch die relative Fitness der Species festgelegt. Somit stirbt eine nicht-performante Spezies nicht sofort aus, sondern bekommt lediglich weniger Nachkommen zugeteilt.
+
+Der Kreislauf aus Fitness-Evaluation, Crossover, Mutation und Speziation wird wiederholt über mehrere Generationen hinweg ausgeführt, bis sich ein Genom mit gewünschter Performanz entwickelt. 
 
 
 \section{Grundlagen von Computerspielen}
