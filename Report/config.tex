@@ -35,18 +35,10 @@
 \usepackage{tocloft}
 \usepackage{makecell}
 \usepackage{hhline}
-
 \usepackage{longtable}
 \usepackage{svg}
 \usepackage{amssymb}
-
-%Benedikt
-\usepackage{xltabular}
-
-% Davids Abschnitt
-\usepackage{geometry}
-\usepackage{pdflscape}
-\usepackage{wrapfig}
+\usepackage{multirow}
 
 %% Schriftarten- und Zeichenpakete
 \usepackage[T1]{fontenc}
@@ -164,7 +156,7 @@
 
 \newcommand{\initializeBibliography}{
 	\ihead{}
-
+	\printbibliography[title=\Literaturverzeichnis] 
 	\cleardoublepage
 }
 

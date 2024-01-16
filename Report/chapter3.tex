@@ -20,7 +20,7 @@ Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewähl
 	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden.
 	\item Der Lander soll alleine durch einen abgeleiteten Agenten basierend auf dem NEAT Algorithmus gesteuert werden
 	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden.
-	\item Der finale Agent soll in 99\% der Fälle innerhalb der Endmarkierungen landen können .
+	\item Der finale Agent soll als Lösung mindestens 200  Punkte erreichen. \cite{gymnasiumdoc}
 \end{itemize}
 
 Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
@@ -28,12 +28,14 @@ Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
 	\item Das Programm, die Findung eines optimalen Landers, soll einfach, und replizierbar ausführbar sein.
 \end{itemize}
 
-\textbf{Implementationsdetails.} Die Implementierung des Algorithmus orientiert sich an der originalen Beschreibung \cite{NEAT}. An manchen Stellen wurde die Vorgehensweise der bereits-existierenden Bibliothek Python NEAT \cite{pythonneat} als Vorbild genommen, beispielsweise bei der zufälligen Generierung von Gewichtswerten mittels Normalverteilung, welche in der originalen Beschreibung nicht (Nur im dazugehörigen C++ Code) näher erläutert wird. 
+\textbf{Implementationsdetails} 
+
+Die Implementierung des Algorithmus orientiert sich an der originalen Beschreibung \cite{NEAT}. An manchen Stellen wurde die Vorgehensweise der bereits-existierenden Bibliothek Python NEAT \cite{pythonneat} als Vorbild genommen, beispielsweise bei der zufälligen Generierung von Gewichtswerten mittels Normalverteilung, welche in der originalen Beschreibung nicht (Nur im dazugehörigen C++ Code) näher erläutert wird. 
 
 
 \section{Visualisierungskonzept}
 
-Der Techstack des Visualisierungskonzeptes ist durch die Vorgaben des Kurses hervorgegangen. Dementsprechend wurde Python in Kombination mit Manim eingesetzt worden, um das Konzept visuell ansprechend in Videoform zu animieren und darzustellen. Die Vertonung wurde TODO @DAVID...
+Der Techstack des Visualisierungskonzeptes ist durch die Vorgaben des Kurses hervorgegangen. Dementsprechend wurde Python in Kombination mit Manim eingesetzt worden, um das Konzept visuell ansprechend in Videoform zu animieren und darzustellen. Die Vertonung wurde durch das Text-to-speech Programm ElevenLabs umgesetzt. Der Schnitt und die Videobearbeitung erfolgt durch ClipChamp. 
 
 Die Anforderungen an diesen Teil des Projektes werden ebenfalls in funktionale und nicht funktionale eingeteilt:  
 
@@ -56,7 +58,7 @@ Nicht funktionale
 
 \end{itemize}
 
-Bei der Implementierung gilt es die zuvor erarbeiteten Visualisierungsgrundlagen entsprechend einzuordnen und zu verwenden. Beginnend mit den drei zentralen der Planung. Es gilt das übergeordnete Ziel den NEAT Algorithmus anhand von natürlichen Phänomenen möglichst verständlich zu erklären. Das Ziel ist es zu informieren und zu inspiereren. Einerseits über die Möglichkeiten die genetische Algorithmen bieten und andererseits ihr Potential und die Faszination dahinter zu teilen und zu verbreiten. Als Zielgruppe ist aufgrund des wissenschaftliche Kontext vorallem technisch versierte und interessierte Studenten hauptsächlich der Informatik und Mathematik Domäne anzusehen. Hier kann ein maximaler Mehrwert erzeugt werden, da Konzepte wie Neuronale Netze bereits bekannt sind und komplexere Datenübersichten nicht sofort abgetan werden. 
+Bei der Implementierung gilt es die zuvor erarbeiteten Visualisierungsgrundlagen entsprechend einzuordnen und zu verwenden. Beginnend mit den drei zentralen der Planung. Es gilt das übergeordnete Ziel den NEAT Algorithmus anhand von natürlichen Phänomenen möglichst verständlich zu erklären. Das Ziel ist es zu informieren und zu inspiereren. Einerseits über die Möglichkeiten die genetische Algorithmen bieten und andererseits ihr Potential und die Faszination dahinter zu teilen und zu verbreiten. Als Zielgruppe ist aufgrund des wissenschaftliche Kontext vorallem technisch versierte und interessierte Studenten hauptsächlich der MINT Domäne anzusehen. Hier kann ein maximaler Mehrwert erzeugt werden, da Konzepte wie Neuronale Netze bereits bekannt sind und komplexere Datenübersichten nicht sofort abgetan werden. 
 
 Fortfahrend mit der visuellen Gestaltung wurde sich hauptsächlich an darstellenden und organisierenden Bildern bedient. Damit wird der bei diesem Thema benötigte hohe Informationsfluss und zusätzliche Strukturierung kund getan. Interpretierende Bilder werden immer dann verwendet, wenn das theoretische so komplex ist, dass die Gefahr besteht den Zuhörer zu verlieren und aber auch um Breakpoints zu setzten um bereits verlorene Zuhörer wieder einzufangen. 
 
