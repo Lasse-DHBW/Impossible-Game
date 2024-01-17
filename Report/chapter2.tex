@@ -5,8 +5,7 @@
 
 \textbf{Historische Entwicklung genetischer Algorithmen}
 
-Die Entwicklung genetischer Algorithmen ist eng verbunden mit dem Aufkommen und der Evolution des maschinellen Lernens. Nun übertroffen durch Methoden im Reinforcement Learning, war die Neuroevolution um die Jahrtausendwende ein relevantes Forschungsgebiet. Der Algorithmus wendet das Konzept der Evolution auf Neurale Netzwerke an. Anders als die vorausgegangenen Algorithmen werden nicht nur die Gewichte der Netzwerke optimiert, sondern auch die Netzwerkstruktur. Vorteil der Evolutions-Methodik ist, dass Lösungen für Probleme gefunden werden können, für welche keine Kostenfunktion formuliert werden kann. Der Reward, oder die negativen Kosten werden meist lediglich für einzelne Handlungen der Agenten vergeben. Auf solche Probleme sind Optimierungsverfahren, welche eine Funktion optimiere, nicht anwendbar. 
-Trotz Etablierung des gradienten-basierten Deep Learning, besitzt die Neuroevolution Eigenschaften, welche das Konzept in Zukunft wieder aufleben lassen könnten. Beispielsweise erlaubt sie eine einfache und effiziente Parallelisierung der einzelnen Agentensimulationen und kann somit beliebig skaliert werden \cite{Such2017DeepNG}. 
+Die Entwicklung genetischer Algorithmen ist eng mit dem Aufkommen und der Evolution des maschinellen Lernens verknüpft. Ursprünglich ein bedeutendes Forschungsfeld, wurde die Neuroevolution in weiten Teilen durch Methoden im Bereich des Reinforcement Learning übertroffen. Der NEAT-Algorithmus wendet das Konzept der Evolution auf neuronale Netzwerke an, indem er nicht nur die Gewichte, sondern auch die Struktur der Netzwerke optimiert. Ein Vorteil dieser Methodik liegt darin, dass Lösungen für Probleme gefunden werden können, für die keine explizite Kostenfunktion formuliert werden kann. Belohnungen oder negative Kosten werden oft nur für einzelne Aktionen der Agenten vergeben, wodurch traditionelle Optimierungsverfahren, die eine Funktion optimieren, nicht anwendbar sind. Trotz der Etablierung des gradientenbasierten Deep Learning könnte die Neuroevolution aufgrund ihrer Eigenschaften, wie der einfachen und effizienten Parallelisierung, zukünftig wieder an Bedeutung gewinnen \cite{Such2017DeepNG}.
 
 \textbf{Bestandteile von NEAT}
 
@@ -15,65 +14,60 @@ NEAT (Neuroevolution of augmenting topologies) umfasst mehrere Schlüsselkompone
 \begin{itemize}
 	\item \textbf{Neural (N)}: NEAT beginnt mit einem grundlegenden neuronalen Netz und erhöht dessen Komplexität bei Bedarf.
 	\item \textbf{Evolution (E)}: Dies beinhaltet Mechanismen wie Mutation, Crossover und Selektion zur Entwicklung der Netze.
-	\item \textbf{of augmenting Topologies (AT)}: NEAT startet mit der einfachsten Netzwerkstruktur und fügt dann Komplexität hinzu, wenn diese die Leistung der Netzwerke verbessert. Komplexität wird in Form der Struktur der neuronalen Netze, einschließlich der Anzahl an Neuronen und Layern, sowie den Verbindungen zwischen Layern, ausgedrückt.
+	\item \textbf{of augmenting Topologies (AT)}: NEAT startet mit der einfachsten Netzwerkstruktur und fügt dann Komplexität hinzu, wenn diese die Leistung der Netzwerke verbessert. Die Komplexität wird durch die Struktur der neuronalen Netze, einschließlich der Anzahl der Neuronen und Layer sowie der Verbindungen zwischen den Layern, ausgedrückt.
 \end{itemize}
 
-In NEAT besteht jedes Genom aus einer Reihe von Knoten- und Kanten-Genen. Wesentlich ist hierbei, dass bei Enstehung jedes Gen eine global einzigartige Innovationsnummer zugewiesen bekommt, welche den Enstehungszeitpunkt angeben. Hierdurch wird eine Eindeutige Vererbung der Gene ermöglicht.
+Jedes Genom in NEAT besteht aus einer Reihe von Knoten- und Kanten-Genen. Wesentlich ist hierbei, dass jedem neu entstehenden Gen eine global einzigartige Innovationsnummer zugewiesen wird, die den Entstehungszeitpunkt angibt und eine eindeutige Vererbung der Gene ermöglicht.
 
-Der Algorithmus wird mit einer bestimmten Anzahl $x$ von Individuen angestoßen. Jedes Individuum ist ein Neurales Netzwerk, definiert durch ein bestimmtes Genom. Anfangs existieren nur die Verbindungen zwischen Input $O^m$ und Output $Y^n$. NEAT kann auf Simulationsaufgaben, wie das erlernen von einfachen Videospielen, angewandt werden. Meist steht der Input als Zustandsvektor für den Zustand des Agenten und der zugehörigen Simulationsumgebung. Basierend auf $O$ errechnet das Neurale Netzwerk die Handlung $Y$, welche in der Simulationumgebung ausgeführt wird. Für bestimmte Zustände der Umgebung oder des Agenten können Belohnungen vergeben werden, welche zur Fitness aufsummiert werden. Ein Agent mit menschenähnlichen Gliedmaßen kann belohnt werden, sobald die Koordinate des Kopfes eine bestimmte Höhe überschreitet, falls die zu bewältigende Aufgabe das Aufstehen aus einer Liegeposition ist. Jedes Genom wird einzeln evaluiert und die zugehörige Fitness dokumentiert.
+Der Algorithmus wird mit einer bestimmten Anzahl von Individuen $x$ initialisiert, wobei jedes Individuum ein neuronales Netzwerk darstellt, definiert durch ein spezifisches Genom. Anfangs existieren nur Verbindungen zwischen Input $O^m$ und Output $Y^n$. NEAT eignet sich für Simulationsaufgaben wie das Erlernen einfacher Videospiele. Dabei repräsentiert der Input-Zustandsvektor den Zustand des Agenten und seiner Umgebung. Basierend auf $O$ berechnet das neuronale Netzwerk die Handlung $Y$, die dann in der Simulationsumgebung ausgeführt wird. Für bestimmte Zustände der Umgebung oder des Agenten können Belohnungen vergeben werden, die zur Fitness aufsummiert werden. Beispielsweise könnte ein Agent mit menschenähnlichen Gliedmaßen belohnt werden, wenn die Koordinate des Kopfes eine bestimmte Höhe überschreitet, wie bei der Aufgabe, aus einer Liegeposition aufzustehen. Jedes Genom wird einzeln evaluiert, und die zugehörige Fitness wird dokumentiert.
 
-\textbf{Crossover und Mutation in NEAT}
+\section{Crossover und Mutation in NEAT}
 
-Im Crossover-Prozess werden zwei Eltern-Genome kombiniert um ein neues Kind-Genom zu erstellen. Anschließend garantiert eine potenzielle Mutation der Genom-Charakteristika eine Exploration der Topologie und Gewichtswerte um das ideale Genom zu finden. Die Auswahl der Eltern-Genome basiert dabei auf der evaluierten Fitness und wird später erläutert.
+\textbf{Crossover-Prozess}
 
-Der Crossover-Prozess fokussiert sich auf Knoten- und Kanten-Gene. Jedes Kantengen hat typischerweise fünf Attribute: Innovationsnummer, Ursprungsknoten, Endknoten, Gewicht und Aktivierungsstatus. Ein Knoten wird durch zwei Attribute definiert: Innovationsnummer und Knotentyp (Sensor, Hidden, Output). Das Kind-Genom erbt die Gene der Eltern-Genome. Hierbei wird ein überlappendes Gen zwischen den beiden Eltern zufällig ausgewählt. Die überschüssigen Gene werden nur vom Elternteil mit der höheren Fitness übernommen. 
-Überschüssige Gene sind solche Gene deren Innovationsnummer über die maximale Innovationsnummer des anderen Genoms hinausreichen.
+Im Crossover-Prozess werden zwei Eltern-Genome kombiniert, um ein neues Kind-Genom zu erstellen. Eine potenzielle Mutation der Genom-Charakteristika ermöglicht die Exploration der Topologie und Gewichtswerte, um das ideale Genom zu finden. Die Auswahl der Eltern-Genome basiert dabei auf der evaluierten Fitness und wird später erläutert.
 
-Es gibt fünf Arten von Mutationen in NEAT, welche das neu-entstandene Genom durchlaufen kann:
-\begin{enumerate}
-	\item Erzeugung einer neuen Verbindung mit einem Gewicht $w \sim \mathcal{P}$, wobei $\mathcal{P}$ beispielsweise als $\mathcal{N}(0, \sigma^2)$ gewählt wird.
-	\item Teilen einer zufälligen bestehenden Verbindung durch Hinzufügen eines Knotens, wobei die bestehende Verbindung, der erste Teil der Verbindung, erhalten bleibt und die neue Verbindung ein Gewicht von 1 erhält.
-	\item Aktivieren oder Deaktivieren einer Verbindung.
-	\item Gewichtsverschiebung eines zufälligen Gewichts durch Addition mit einer Zahl $x \sim \mathcal{Q}$.
-	\item Gewichtsneusetzung durch einen neuen Wert $w \sim \mathcal{P}$.
-\end{enumerate}
+Der Crossover-Prozess konzentriert sich auf Knoten- und Kanten-Gene. Jedes Kantengen hat typischerweise fünf Attribute: Innovationsnummer, Ursprungsknoten, Endknoten, Gewicht und Aktivierungsstatus. Ein Knoten wird durch zwei Attribute definiert: Innovationsnummer und Knotentyp (Sensor, Hidden, Output). Das Kind-Genom erbt die Gene der Eltern-Genome, wobei ein überlappendes Gen zufällig ausgewählt wird. Die überschüssigen Gene werden nur vom Elternteil mit der höheren Fitness übernommen. Überschüssige Gene sind solche, deren Innovationsnummer über die maximale Innovationsnummer des anderen Genoms hinausgeht.
+
+Es gibt fünf Arten von Mutationen in NEAT, die das neu entstandene Genom durchlaufen kann:
+1. Erzeugung einer neuen Verbindung mit einem Gewicht \(w \sim \mathcal{P}\), wobei \(\mathcal{P}\) beispielsweise als \(\mathcal{N}(0, \sigma^2)\) gewählt wird.
+2. Teilen einer zufälligen bestehenden Verbindung durch Hinzufügen eines Knotens, wobei die bestehende Verbindung, der erste Teil der Verbindung, erhalten bleibt und die neue Verbindung ein Gewicht von 1 erhält.
+3. Aktivieren oder Deaktivieren einer Verbindung.
+4. Gewichtsverschiebung eines zufälligen Gewichts durch Addition mit einer Zahl \(x \sim \mathcal{Q}\).
+5. Gewichtsneusetzung durch einen neuen Wert \(w \sim \mathcal{P}\).
 
 \textbf{Selektion und Speziation in NEAT}
 
 \begin{equation}
-d(G_1, G_2) = c_1 \cdot \frac{E}{N} + c_2 \cdot \frac{D}{N} + c_3 \cdot \overline{W}
-\label{eq:neatdistance}
+	d(G_1, G_2) = c_1 \cdot \frac{E}{N} + c_2 \cdot \frac{D}{N} + c_3 \cdot \overline{W}
+	\label{eq:neatdistance}
 \end{equation}
 
-Bei der Speziation werden Genome basierend auf ihrer genetischen Distanz (Gleichung \ref{eq:neatdistance}) in Spezies gruppiert. Hierbei sind $c_1$, $c_2$ und  $c_3$ Hyperparameter, $E$ die Anzahl der überschüssigen Gene, $D$ die Anzahl der disjunkten Gene und $\overline{W}$ die durchschnittliche Gewichtsdistanz der überlappenden Gene der Genome. Folglich werden Genome, deren Distanz unter einem bestimmten Schwellenwert liegt, in einer Spezies gruppiert. Ist die Distanz zu groß und existiert keine passende Spezies, wird eine neue Spezies, mit dem entsprechenden Genom als Basis gebildet. 
+Bei der Speziation werden Genome basierend auf ihrer genetischen Distanz (Gleichung \ref{eq:neatdistance}) in Spezies gruppiert. Hierbei sind \(c_1\), \(c_2\) und  \(c_3\) Hyperparameter, \(E\) die Anzahl der überschüssigen Gene, \(D\) die Anzahl der disjunkten Gene und \(\overline{W}\) die durchschnittliche Gewichtsdistanz der überlappenden Gene der Genome. Folglich werden Genome, deren Distanz unter einem bestimmten Schwellenwert liegt, in einer Spezies gruppiert. Ist die Distanz zu groß und existiert keine passende Spezies, wird eine neue Spezies mit dem entsprechenden Genom als Basis gebildet.
 
+Die Selektion in NEAT basiert auf dem Fitnesswert verschiedener Genome. Innerhalb der Spezies werden Genome nach ihrer Fitness sortiert und anteilig, beispielsweise die 20\% mit den höchsten Fitness-Werten, für die Kreuzung zur Erstellung der nächsten Generation ausgewählt.
 
-Die Selektion in NEAT basiert auf dem Fitnesswert verschiedener Genome. Innerhalb der Spezien werden Genome nach ihrer Fitness sortiert und anteilig, beispielsweise die 20\% mit den höchsten Fitness-Werten, für die Kreuzung zu dem Erstellen der nächsten Generation ausgewählt. 
+Die Speziation ermöglicht es, dass sich in einer Nische ähnliche Genome weiterentwickeln können, ohne sofort auszusterben, nur weil andere Genom-Variationen in der aktuellen Evaluation eine höhere Fitness erzielt haben. Die Kreuzung von ähnlichen Genomen innerhalb einer Nische führt mit höherer Wahrscheinlichkeit zu funktionierenden Kind-Genomen. Hierdurch kann strukturelle Vielfalt bewahrt werden, was die Innovation auf der Topologie-Ebene fördert und die Evolution von Netzwerken durch kleinere, inkrementelle Mutationen ermöglicht. Drastische Mutationen führen zur Bildung neuer Spezies. Die absolut erlaubte Anzahl an Nachkommen pro Spezies wird durch die relative Fitness der Spezies festgelegt. Somit stirbt eine nicht-performante Spezies nicht sofort aus, sondern erhält lediglich weniger Nachkommen zugewiesen.
 
-
-Die Speziation erlaubt es, dass sich in einer Niesche ähnliche Genome weiterentwickeln können, ohne sofort auszusterben, nur weil andere Genom-Variationen in der jetzigen Evaluation eine höhere Fitness erzielt haben. Die Kreuzung von ähnlichen Genomen in einer Niesche führt mit höherer Wahrscheinlichkeit zu funktionierenden Kind-Genomen. Hierdurch kann eine Strukturelle vielfalt bewahrt werden. Dies fördert die Innovation auf der Topologie-Ebene und ermöglicht die Evolution von Netzwerken durch kleinere inkrementelle Mutationen - Drastische Mutationen führen zu neuen Spezies. Die absolut erlaubte Anzahl an Nachkommen pro Spezies wird durch die relative Fitness der Species festgelegt. Somit stirbt eine nicht-performante Spezies nicht sofort aus, sondern bekommt lediglich weniger Nachkommen zugeteilt.
-
-Der Kreislauf aus Fitness-Evaluation, Crossover, Mutation und Speziation wird wiederholt über mehrere Generationen hinweg ausgeführt, bis sich ein Genom mit gewünschter Performanz entwickelt. 
-
+Der Kreislauf aus Fitness-Evaluation, Crossover, Mutation und Speziation wird über mehrere Generationen hinweg wiederholt, bis sich ein Genom mit gewünschter Performance entwickelt.
 
 \section{Grundlagen von Computerspielen}
 
 \textbf{Historische Bedeutung und Entwicklung}
 
-Die historische Entwicklung von Computerspielen ist eng mit den technologischen Fortschritten und gesellschaftlichen Veränderungen verbunden. Ihren Ursprung finden Computerspiele in den frühen Experimenten an Universitäten in den 1950er Jahren, die sich zu einer bedeutenden Unterhaltungsform in der digitalen Ära entwickelt haben. Diese Spiele, anfänglich Teil von wissenschaftlichen Versuchen, wurden bald zu einem kulturellen Phänomen, das von militärischer Simulation bis hin zur familiären Unterhaltung reicht. Die gesellschaftliche Durchdringung von Computerspielen spiegelt ihre Bedeutung in der Analyse menschlichen Verhaltens wider \cite{Huizinga1939}.
+Die historische Entwicklung von Computerspielen ist eng mit technologischen Fortschritten und gesellschaftlichen Veränderungen verknüpft. Ihren Ursprung finden Computerspiele in den frühen Experimenten an Universitäten in den 1950er Jahren, die sich zu einer bedeutenden Unterhaltungsform in der digitalen Ära entwickelt haben. Ursprünglich Teil von wissenschaftlichen Versuchen, wurden diese Spiele schnell zu einem kulturellen Phänomen, das von militärischer Simulation bis zur familiären Unterhaltung reicht. Die gesellschaftliche Durchdringung von Computerspielen spiegelt ihre Bedeutung in der Analyse menschlichen Verhaltens wider \cite{Huizinga1939}.
 
 \textbf{Charakteristika von Computerspielen}
 
-Computerspiele zeichnen sich durch mehrere grundlegende Charakteristika aus. Sie bieten eine interaktive Umgebung, in der Spieler auf variierende Herausforderungen und Szenarien reagieren. Die Spiele definieren spezifische Ziele, sei es das Erreichen eines Highscores oder das Überleben in einer virtuellen Welt. Wettbewerb und Kooperation sind zentrale Aspekte, wobei Spieler oft gegen computergesteuerte Gegner oder in einem Mehrspielermodus antreten. Die Steuerung von Agenten, seien es Charaktere oder Objekte, in einer meist simplifizierten Welt ist ein weiteres Merkmal. Die visuelle Gestaltung der Spiele reicht von einfachen Grafiken bis hin zu komplexen 3D-Welten, wobei die visuelle Qualität nicht immer ausschlaggebend für den Erfolg eines Spiels ist.
+Computerspiele zeichnen sich durch mehrere grundlegende Charakteristika aus. Sie bieten eine interaktive Umgebung, in der Spieler auf variierende Herausforderungen und Szenarien reagieren. Die Spiele definieren spezifische Ziele, sei es das Erreichen eines Highscores oder das Überleben in einer virtuellen Welt. Wettbewerb und Kooperation sind zentrale Aspekte, wobei Spieler oft gegen computergesteuerte Gegner oder in einem Mehrspielermodus antreten. Die Steuerung von Agenten, sei es in Form von Charakteren oder Objekten, in einer meist simplifizierten Welt ist ein weiteres Merkmal. Die visuelle Gestaltung der Spiele reicht von einfachen Grafiken bis zu komplexen 3D-Welten, wobei die visuelle Qualität nicht immer ausschlaggebend für den Erfolg eines Spiels ist.
 
 \textbf{Rolle der Visualisierung}
 
-Die Visualisierung in Computerspielen geht über die ästhetische Komponente hinaus und ist integraler Bestandteil des Spielerlebnisses. Sie ermöglicht es, komplexe Welten darzustellen, Geschichten zu erzählen und emotionale Reaktionen zu evozieren. Mit der Weiterentwicklung der Grafiktechnologien haben sich die Darstellungsmöglichkeiten in Spielen erweitert und reichen von einfachen Pixelgrafiken bis hin zu realistischen 3D-Umgebungen \cite{COMP}.
+Die Visualisierung in Computerspielen geht über die ästhetische Komponente hinaus und ist ein integraler Bestandteil des Spielerlebnisses. Sie ermöglicht es, komplexe Welten darzustellen, Geschichten zu erzählen und emotionale Reaktionen zu evozieren. Mit der Weiterentwicklung der Grafiktechnologien haben sich die Darstellungsmöglichkeiten in Spielen erweitert und reichen von einfachen Pixelgrafiken bis zu realistischen 3D-Umgebungen \cite{COMP}.
 
 \textbf{Zukunftsperspektiven}
 
 Die Zukunft von Computerspielen ist vielversprechend und wird durch die Entwicklung neuer Technologien wie Virtual und Augmented Reality, Cloud-Gaming und künstliche Intelligenz geprägt. Diese Entwicklungen deuten auf eine Ära hin, in der die Grenzen zwischen Realität und virtueller Welt zunehmend verschwimmen und neue Formen des Spielens möglich werden.
-
 
 \section{Grundlagen zu Visualisierungen}
 
@@ -118,7 +112,6 @@ In Bildungsmaterialien eingesetzte Bilder erfüllen unterschiedliche Funktionen:
 	\item Interpretierende Bilder liefern Erklärungen und fördern das Verständnis der Lerninhalte.
 	\item Transformierende Bilder ändern die Betrachtungsweise und vertiefen das Verständnis.
 \end{itemize}
-
 Symbole spielen eine signifikante Rolle, indem sie Objekte und Phänomene kennzeichnen und die Kommunikation über Sprachgrenzen hinweg erleichtern.
 
 Die Zielsetzung und die anvisierte Zielgruppe sind bei der Auswahl und Gestaltung von Bildmaterialien wesentlich. Eine strategische Auswahl kann die Verständlichkeit und Erinnerung der Lerninhalte verbessern \cite{Bilek2007}.
@@ -133,9 +126,9 @@ Visuelle Informationen variieren weitgehend und umfassen:
 
 Die Kategorisierung unterstützt die Erkennung der Vielfalt und des Einflusses von Bildmaterialien im Lernkontext und fördert einen bewussten Einsatz zur Bereicherung und Vertiefung des Lernprozesses.
 
-\textbf{Elemente der Visualisierung und Computerpräsentationen}
+\textbf{Elemente der Visualisierung}
 
-Elemente der Visualisierung und Computerpräsentationen sind wesentliche Werkzeuge in Lernumgebungen, die Inhalte auf eine klar strukturierte Weise kommunizieren \cite{Bilek2007}. Bei der Erstellung von Visualisierungen sollten folgende Punkte beachtet werden:
+Elemente der Visualisierung sind wesentliche Werkzeuge in Lernumgebungen, die Inhalte auf eine klar strukturierte Weise kommunizieren \cite{Bilek2007}. Bei der Erstellung von Visualisierungen sollten folgende Punkte beachtet werden:
 
 \begin{itemize}
 	\item Die Auswahl der Präsentationsmedien und Gestaltungselemente muss den Inhalt adäquat reflektieren.
@@ -145,26 +138,16 @@ Elemente der Visualisierung und Computerpräsentationen sind wesentliche Werkzeu
 	\item Der Einsatz von Farben sollte wohlüberlegt sein, um Kontraste zu schaffen und symbolische Bedeutungen zu nutzen.
 \end{itemize}
 
-Zur Darstellung von Daten sind verschiedene Diagrammtypen verfügbar:
-
-\begin{itemize}
-	\item Listen und Tabellen bieten eine strukturierte Übersicht.
-	\item Kurven- und Balkendiagramme visualisieren Datenverläufe und Vergleiche.
-	\item Kreis- und Tortendiagramme zeigen Anteile und Proportionen.
-	\item Organigramme und Flussdiagramme verdeutlichen Strukturen und Prozesse.
-\end{itemize}
-
 Die korrekte Interpretation der Daten in diesen Diagrammen ist für das Verständnis von wissenschaftlichen Zusammenhängen unerlässlich. Schwierigkeiten, wie die Unterscheidung zwischen x- und y-Achse, müssen adressiert werden \cite{Happonen2011}.
 
-Die Anordnung der Präsentationselemente folgt einer spezifischen Komposition, die auf Symmetrie, Übertragung, Rhythmus und Dynamik basiert. Vorlagen in Präsentationsprogrammen können hierbei als Hilfsmittel dienen, um ein konsistentes und logisches Layout zu gewährleisten.
-
-Beim Einsatz grafischer Elemente ist es von Bedeutung, dass diese das Wesentliche nicht überlagern. Multimedia-Präsentationen sollten ergänzend verwendet werden, wenn physische Objekte nicht verfügbar sind \cite{Urbanova2008}.
+Die Anordnung der Präsentationselemente folgt einer spezifischen Komposition, die auf Symmetrie, Übertragung, Rhythmus und Dynamik basiert. Vorlagen können hierbei als Hilfsmittel dienen, um ein konsistentes und logisches Layout zu gewährleisten.
 
 In der Gestaltung von Lernmaterialien durch Computerpräsentationen wird eine Balance zwischen Informationsvermittlung, Motivation und Anpassung an individuelle Lerngeschwindigkeiten angestrebt \cite{Vermirovsky2010}.
 
 \textbf{Zukunftsperspektiven}
 
 Die Zukunft der Visualisierung deutet auf eine verstärkte Integration von virtueller und physischer Realität hin, die neue Wege für immersive Lern- und Erfahrungsräume eröffnet. Diese technologischen Fortschritte versprechen eine tiefere Einbindung und Verständnisförderung in Bildung und Präsentation \cite{Vermirovsky2010ImportanceVisualisation}.
+
 
 
 %People use visualizations to make large-scale decisions, such as whether to evacuate a town before a hurricane strike, and more personal decisions, such as which medical treatment to undergo. Given their widespread use and social impact, researchers in many domains, including cognitive psychology, information visualization, and medical decision making, study how we make decisions with visualizations. Even though researchers continue to develop a wealth of knowledge on decision making with visualizations, there are obstacles for scientists interested in integrating findings from other domains
