@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 
 
+
 def read_file(generation, run, file):
     prefix = "." if os.getcwd().split("\\")[-1] == "src" else "src"  # cwd is either impossible-game or src depending on if the file is executed via cmd terminal, manim_sideview or interactive terminal
     return torch.load(f'{prefix}/runs/continuous_lunar_lander/{run}/{file}_{generation}.pt')
@@ -23,15 +24,16 @@ class CText(Text):
         super().__init__(text, font=font, **kwargs)
 
 def get_direction(angle):
-    return np.array([-np.cos(angle), np.sin(angle), 0])
+    return np.array([-np.sin(angle), np.cos(angle), 0])
 
 def calc_lag_ratio(total_duration, subanim_duration, num_subanims):
     last_subanimation_start_time = total_duration - subanim_duration
-    lag_ratio = last_subanimation_start_time / total_duration / (num_subanims - 1)
+    lag_ratio = last_subanimation_start_time / (num_subanims - 1)
     return lag_ratio
 
-def analyse_run(run):
+def analyse_run(run, num_species=None):
     data = []
+    species_set = set()
 
     prefix = "." if os.getcwd().split("\\")[-1] == "src" else "src"
     for filename in os.listdir(f"{prefix}\\runs\\continuous_lunar_lander\\{run}"):
@@ -45,11 +47,13 @@ def analyse_run(run):
             best_genotype = None
 
             for species, (fitnesses, genotypes) in fitness_perspecies.items():
+                species_set.add(species)
                 max_fitness = max(fitnesses)
                 max_index = fitnesses.index(max_fitness)
                 file_data[f'species_{species}_min'] = min(fitnesses)
                 file_data[f'species_{species}_mean'] = sum(fitnesses) / len(fitnesses)
                 file_data[f'species_{species}_max'] = max_fitness
+                file_data[f'species_{species}_num_genotypes'] = len(genotypes)
 
                 # Check if this species has the best max fitness
                 if max_fitness > best_max_fitness:
@@ -59,26 +63,29 @@ def analyse_run(run):
 
             file_data['best_species'] = best_species
             file_data['best_genotype'] = best_genotype
+            file_data['best_fitness'] = best_max_fitness
 
             data.append(file_data)
 
     df = pd.DataFrame(data).sort_values("Generation")
+    df.set_index("Generation", inplace=True)
 
+    # Visualizations
+    if num_species is not None:
+        species_set = list(species_set)[:num_species]
 
-    # Visualisation of max fitness per species
-    df = df[:163]  # <- second best run, tiny deviation to best
+    # ========== Visualisation of max fitness per species
 
-    for col in ["species_0_max", "species_1_max", "species_2_max", "species_3_max"]:
+    # df = df[:163]  # <- second best run, tiny deviation to best
+    for col in [f"species_{species}_max" for species in species_set]:
         df.loc[:,col] = df[col].clip(lower=-500, upper=300)
         # clips 1 value in species 1 and 2 each (outlier removal)
 
     # Assuming your DataFrame has columns named 'Column1', 'Column2', 'Column3'
     plt.figure(figsize=(10, 6))
     plt.grid(True)
-    plt.plot(list(df['species_0_max']), label='species_0_max')
-    plt.plot(list(df['species_1_max']), label='species_1_max')
-    plt.plot(list(df['species_2_max']), label='species_2_max')
-    plt.plot(list(df['species_3_max']), label='species_3_max')
+    for species in species_set:
+        plt.plot(list(df[f'species_{species}_max']), label=f'species_{species}_max')
 
     xticks = np.arange(0, df.__len__(), 5)
     plt.xticks(xticks, rotation=90) 
@@ -96,4 +103,31 @@ def analyse_run(run):
     plt.show()
 
 
-    return df
+    # ========== Visualisation of num of genotypes per species per gen
+
+    cols = [f"species_{species}_num_genotypes" for species in species_set]
+    analysis2 = df[cols]
+    analysis2 = analysis2.fillna(0)
+    analysis2["sum"] = analysis2[cols].sum(axis=1)
+
+    # Assuming your DataFrame has columns named 'Column1', 'Column2', 'Column3'
+    plt.figure(figsize=(10, 6))
+    plt.grid(True)
+
+    for species in species_set:
+        plt.plot(list(analysis2[f'species_{species}_num_genotypes']), label=f'species_{species}_num_genotypes')
+
+    xticks = np.arange(0, df.__len__(), 5)
+    plt.xticks(xticks, rotation=90) 
+
+    # Adding titles and labels
+    plt.xlabel('Index')
+    plt.ylabel('Values')
+
+    # Show legend
+    plt.legend()
+
+    # Show the plot
+    plt.show()
+
+    return df, analysis2

@@ -3,8 +3,7 @@ media/
 manim_notes.py
 ideas.py
 manim_experiments.py
-src/runs/continuous_lunar_lander/20231220_115303
-gymnasium_videos/
+src/runs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
