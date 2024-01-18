@@ -2,70 +2,61 @@
 \chapter{Praktische Ausarbeitung}
 \label{chapter:3}
 \section{Projektbeschreibung}
-Basierend auf der Faszination für die Modellierung natürlicher Ereignisse in Computer gesteuerten Systemen, ist das Ziel des Projektes, basierend auf dem NEAT Algorithmus, einen Agenten zu konzipieren um ein Computerspiel zu meistern.
+Das Ziel dieses Projekts, inspiriert durch die Faszination für die Modellierung natürlicher Ereignisse in computergesteuerten Systemen, ist die Entwicklung eines Agenten, basierend auf dem NEAT-Algorithmus, um ein Computerspiel zu meistern.
 
-Als Spiel wurde sich an einem Standard Projekt der Gymnasium (gym) Bibliothek \cite{gymnasiumbib} bedient. Das Python-Paket gym ist eine Open-Source-Bibliothek, die von OpenAI entwickelt wurde und eine Sammlung von standardisierten Umgebungen für die Entwicklung und das Testen von Algorithmen im Bereich des Reinforcement Learning (RL) bietet. Gym zielt darauf ab, die Entwicklung und Vergleichbarkeit von RL-Algorithmen zu erleichtern, indem es eine einheitliche Schnittstelle für verschiedene Arten von Umgebungen bereitstellt. Da mit dem NEAT Algorithmus Aufgaben aus dem Bereich RL erlernt werden können, kann die Biblithek anwendung finden. Teil des Paketes sind es zahlreiche Simulationsumgebungen, wie beispielsweie alle Atari Spiele. 
+Für das Projekt wurde ein Standardspiel aus der Gymnasium (gym) Bibliothek ausgewählt \cite{gymnasiumbib}. Gym, ein Open-Source-Python-Paket entwickelt von OpenAI, bietet eine Sammlung standardisierter Umgebungen zur Entwicklung und zum Testen von Algorithmen im Bereich des Reinforcement Learning (RL). Es erleichtert die Entwicklung und Vergleichbarkeit von RL-Algorithmen durch eine einheitliche Schnittstelle für unterschiedliche Umgebungen. Der NEAT-Algorithmus eignet sich zur Bewältigung von RL-Aufgaben, weshalb diese Bibliothek Anwendung findet. Gym umfasst zahlreiche Simulationsumgebungen, einschließlich aller Atari-Spiele.
 
-Eines der Spiele, \enquote{Lunar Lander}, zeichnet sich durch das einfach Ziel, als auch die einfachen Werkzeuge zur Zielerreichung aus. Inhalt des Spiels ist es, einen Mondlander sicher auf der Mondoberfläche, in einem markierten bereich zu landen. Die Leistungskriterien sind hierbei, wie waagrecht der Lander beim Anflug ist, wieviel Treibstoff verbraucht wird, und ob der Lander in der richtigen Orientierung sicher im Zielbereich gelandet werden kann. Zur Erreichung dieses Ziels kann der Lander mit zwei linearen Signalen $a$ und $b$ die Leistung des Haupttriebwerks, und der Seitentriebwerke bestimmen. Das Haupttriebwerk feuert bei $a>0,5$ mit einer bis zu $a=1$ proportional steigenden Intensität. Ähnlich feueren jeweils das linke oder rechte Triebwerk bei $-1\leq b<-0,5$ und $1 \geq b>0,5$.
+Das ausgewählte Spiel, \enquote{Lunar Lander}, zeichnet sich durch ein einfaches Ziel und einfache Steuerungselemente aus. Der Inhalt des Spiels besteht darin, einen Mondlander sicher und waagrecht in einem markierten Bereich auf der Mondoberfläche zu landen. Die Leistungskriterien umfassen den waagrechten Anflug, den Treibstoffverbrauch und ob der Lander in der richtigen Orientierung sicher im Zielbereich landet. Zur Steuerung des Landers werden zwei lineare Signale $a$ und $b$ verwendet, um die Leistung des Haupt- und der Seitentriebwerke zu regulieren. Das Haupttriebwerk wird bei $a>0,5$ aktiviert, wobei die Intensität bis $a=1$ proportional zunimmt. Ähnlich feuern das linke oder rechte Triebwerk bei $-1\leq b<-0,5$ bzw. $1 \geq b>0,5$.
 
-Ziel des technischen Teil des Projektes ist es also ein Konfiguration für ein neuronales Netz zu finden, sodass basierend auf der relativen Position des Landers die Triebwerke so aktiviert und deaktiviert werden, dass dieser möglichst waagrecht, mit geringem Treibstoffverbrauch innerhalb des Zieles landet. 
+Das technische Ziel des Projekts ist es, eine Konfiguration für ein neuronales Netz zu finden, sodass basierend auf der relativen Position des Landers die Triebwerke so gesteuert werden, dass eine Landung möglichst waagrecht, mit geringem Treibstoffverbrauch und innerhalb des Zielbereichs erfolgt.
 
-Daran anküpfend wird ein Video konzipiert und erstellt, welches des NEAT Algorithmus erklärt und am Beispiel des Lunar Landers illustriert.
+Anschließend wird ein Video konzipiert und erstellt, das den NEAT-Algorithmus erklärt und am Beispiel des Lunar Landers veranschaulicht.
 
 \section{Implementierungskonzept}
-Für die Implementierung dieses Projektes wurde die Programmiersprache Python gewählt. In dieser wurden die einzelnen Komponenten des NEAT Algorithmus, als auch die Integration des Algorithmus mit dem Spiel,  umgesetzt. Die nötige Simulationsumgebung des Spiels stellt die Bibliothek Gymnasium \cite{gymnasiumbib} bereit.
+Für die Realisierung dieses Projektes wurde die Programmiersprache Python ausgewählt. In Python wurden sowohl die einzelnen Komponenten des NEAT-Algorithmus als auch dessen Integration mit dem ausgewählten Spiel umgesetzt. Die benötigte Simulationsumgebung für das Spiel wird durch die Bibliothek Gymnasium bereitgestellt \cite{gymnasiumbib}.
 
-Als funktionale Anforderung wurden dementsprechend die folgenden Aspekte gewählt:
+Als funktionale Anforderungen wurden folgende Punkte festgelegt:
 \begin{itemize}
-	\item Der NEAT Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden.
-	\item Der Lander soll alleine durch einen abgeleiteten Agenten basierend auf dem NEAT Algorithmus gesteuert werden
-	\item Alle Aktionen sollen aus den Beobachtungsvariablen des 8-dimensionalen Input Vektoren abgeleitet werden.
-	\item Der finale Agent soll als Lösung mindestens 200  Punkte erreichen. \cite{gymnasiumdoc}
+	\item Der NEAT-Algorithmus soll basierend auf dem Whitepaper implementiert und getestet werden.
+	\item Der Lander soll ausschließlich durch einen Agenten gesteuert werden, der auf dem NEAT-Algorithmus basiert.
+	\item Alle Aktionen des Landers sollen aus den Beobachtungsvariablen des 8-dimensionalen Inputvektors abgeleitet werden.
+	\item Der finale Agent soll als Lösung mindestens 200 Punkte erreichen \cite{gymnasiumdoc}.
 \end{itemize}
 
-Als nicht funktionale Anforderungen wurden folgende Aspekte gewählt:
+Als nicht-funktionale Anforderung wurde festgelegt:
 \begin{itemize}
-	\item Das Programm, die Findung eines optimalen Landers, soll einfach, und replizierbar ausführbar sein.
+	\item Das Programm zur Ermittlung eines optimalen Landers soll einfach und replizierbar sein.
 \end{itemize}
 
-\textbf{Implementationsdetails} 
+\textbf{Implementierungsdetails}
 
-Die Implementierung des Algorithmus orientiert sich an der originalen Beschreibung \cite{NEAT}. An manchen Stellen wurde die Vorgehensweise der bereits-existierenden Bibliothek Python NEAT \cite{pythonneat} als Vorbild genommen, beispielsweise bei der zufälligen Generierung von Gewichtswerten mittels Normalverteilung, welche in der originalen Beschreibung nicht (Nur im dazugehörigen C++ Code) näher erläutert wird. 
-
+Die Implementierung des NEAT-Algorithmus folgt der ursprünglichen Beschreibung \cite{NEAT}. An einigen Stellen wurde die Vorgehensweise der existierenden Bibliothek Python NEAT \cite{pythonneat} als Orientierung genutzt, beispielsweise bei der zufälligen Generierung von Gewichtswerten mittels Normalverteilung. Diese Aspekte sind in der originalen Beschreibung nicht ausführlich erläutert, sondern nur im dazugehörigen C++-Code zu finden.
 
 \section{Visualisierungskonzept}
 
-Der Techstack des Visualisierungskonzeptes ist durch die Vorgaben des Kurses hervorgegangen. Dementsprechend wurde Python in Kombination mit Manim eingesetzt worden, um das Konzept visuell ansprechend in Videoform zu animieren und darzustellen. Die Vertonung wurde durch das Text-to-speech Programm ElevenLabs umgesetzt. Der Schnitt und die Videobearbeitung erfolgt durch ClipChamp. 
+Das Visualisierungskonzept dieses Projektes basiert auf den Vorgaben des Kurses. Es wurde Python in Kombination mit Manim verwendet, um das Konzept ansprechend in Videoform zu animieren und darzustellen. Die Vertonung erfolgte durch das Text-to-Speech-Programm ElevenLabs, und der Schnitt sowie die Videobearbeitung wurden mit ClipChamp durchgeführt.
 
-Die Anforderungen an diesen Teil des Projektes werden ebenfalls in funktionale und nicht funktionale eingeteilt:  
+Die Anforderungen an diesen Projektteil unterteilen sich in funktionale und nicht-funktionale Kriterien:
 
-Funktionale 
+Funktionale Anforderungen:
 \begin{itemize}
-
-	\item Das Video wurde durch Python und Manim animiert und gerendert 
-	\item Die länge des Videos überschreitet nicht 15 Minuten Laufzeit
-	\item Das Video ist vollständig vertont
-	
+	\item Animation und Rendering des Videos mit Python und Manim.
+	\item Die Videolänge überschreitet 15 Minuten nicht.
+	\item Vollständige Vertonung des Videos.
 \end{itemize}
 
-Nicht funktionale
+Nicht-funktionale Anforderungen:
 \begin{itemize}
-
-	\item Das Video soll ansprechend animiert sein
-	\item Das Konzept von NEAT soll vollständig und verständlich sein
-	\item Visualisierungsgrundlagen sollen berücksichtigt werden
-	\item Ein roter Faden sollte erkennbar sein
-
+	\item Ansprechende Animation.
+	\item Vollständige und verständliche Darstellung des NEAT-Konzepts.
+	\item Berücksichtigung von Visualisierungsgrundlagen.
+	\item Ein klar erkennbarer roter Faden.
 \end{itemize}
 
-Bei der Implementierung gilt es die zuvor erarbeiteten Visualisierungsgrundlagen entsprechend einzuordnen und zu verwenden. Beginnend mit den drei zentralen der Planung. Es gilt das übergeordnete Ziel den NEAT Algorithmus anhand von natürlichen Phänomenen möglichst verständlich zu erklären. Das Ziel ist es zu informieren und zu inspiereren. Einerseits über die Möglichkeiten die genetische Algorithmen bieten und andererseits ihr Potential und die Faszination dahinter zu teilen und zu verbreiten. Als Zielgruppe ist aufgrund des wissenschaftliche Kontext vorallem technisch versierte und interessierte Studenten hauptsächlich der MINT Domäne anzusehen. Hier kann ein maximaler Mehrwert erzeugt werden, da Konzepte wie Neuronale Netze bereits bekannt sind und komplexere Datenübersichten nicht sofort abgetan werden. 
+Bei der Umsetzung war es wichtig, die erarbeiteten Visualisierungsgrundlagen effektiv einzusetzen. Ziel war es, den NEAT-Algorithmus mittels natürlicher Phänomene insbesondere für technisch versierte MINT-Studenten verständlich und inspirierend zu erklären.
 
-Fortfahrend mit der visuellen Gestaltung wurde sich hauptsächlich an darstellenden und organisierenden Bildern bedient. Damit wird der bei diesem Thema benötigte hohe Informationsfluss und zusätzliche Strukturierung kund getan. Interpretierende Bilder werden immer dann verwendet, wenn das theoretische so komplex ist, dass die Gefahr besteht den Zuhörer zu verlieren und aber auch um Breakpoints zu setzten um bereits verlorene Zuhörer wieder einzufangen. 
+In der visuellen Gestaltung lag der Fokus auf darstellenden und organisierenden Bildern, um den Informationsfluss zu strukturieren. Interpretierende Bilder kamen zum Einsatz, um komplexe Theorien zu vermitteln und die Aufmerksamkeit der Zuschauer zu gewinnen. Als Medium wurde das Video gewählt, wobei die Lesbarkeit durch die Schriftart Montserrat und helle Schrift auf dunklem Hintergrund unterstützt wurde. Ergänzt wurde dies durch Umrandungen, Hervorhebungen und gezielten Farbeinsatz. Die Präsentation der Daten erfolgte hauptsächlich über Diagramme, welche die neuronalen Netze abbildeten.
 
-Weiterleitend zu den Elementen der Visualisierung. Hier wurde das Präsentationsmedium -Video- basierend auf den funktionalen Anforderungen gewählt. Die Lesbarkeit wird durch die Schriftart Montserrat und dem konsequenten helle Schrift auf dunklen Hintergrund gewährleistet. Die kulturellen Aneignungen sind auf die deutsche Sprache abgestimmt. Das Layout wurde meist nach subjektiver Einschätzung gewählt, beinhaltet jedoch sowohl Umrandungen als auch Hervorhebungen. Farben werden spärlich und in wichtigen Momenten zur verbesserten Anschaulichkeit verwendet. 
-
-Die Darstellung der Daten erfolgte primär über Grafen Diagramme welche die Zugrundelegenden Neuronalen Netze beschreiben. Da die x-y-Achsen Verwechslungskomponente hier keine Relevanz hat, wurden keine Schritte zur Verbesserung der Anschaulichkeit in diese Richtung unternommen. 
-
-Das Projekt wurde zuerst durch ein skizziertes Storyboard geplant. Hierbei kamen alle Gruppenmitglieder zusammen und berieten über die Ausrichtung und den Detailgrad des Videos. Nach einer anschließenden Verfeinerung und finalen Version wurde dieses in vielen kleinen Etappen erweitert ausgearbeitet und animiert. Die Vertonung erfolgte zum Schluss für jeden Abschnitt einzeln. 
+Die Planung des Projekts begann mit einem skizzierten Storyboard, das von allen Gruppenmitgliedern diskutiert und verfeinert wurde. Nach der Finalisierung erfolgte die schrittweise Umsetzung und Animation. Die Vertonung wurde abschnittsweise durchgeführt.
 
  
