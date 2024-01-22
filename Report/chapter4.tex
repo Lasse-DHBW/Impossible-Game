@@ -9,7 +9,7 @@
 		\multirow{34}{*}[4ex]{\rotatebox[origin=c]{90}{\centering \textbf{Visualisierung}}} & \textbf{Anforderungen} & \textbf{Erfüllt} \\
 		\cline{2-3}
 		& Das Video wurde durch Python und Manim animiert und gerendert & $\square$ \\[4ex]
-		& Die Länge des Videos überschreitet nicht 15 Minuten & $\square$ \\[4ex]
+		& Die Länge des Videos überschreitet nicht 15 Minuten maßgeblich & $\square$ \\[4ex]
 		& Das Video ist vollständig vertont & $\square$ \\[4ex]
 		\cline{2-3}
 		\multirow{44}{*}[10ex]{\rotatebox[origin=c]{90}{\centering \textbf{Implementierung}}} & Das Konzept von NEAT soll vollständig und verständlich sein & $\square$ \\[4ex]
@@ -30,7 +30,7 @@
 
 Um das Projekt sachgemäß zu evaluieren, wird im Folgenden die Liste der Anforderungen auf ihre Erfüllung hin überprüft.
 
-Die Bewertung der Visualisierung basiert auf dem eingereichten Video. Aus diesem lässt sich erkennen, dass das gesamte Video im Manim-Stil erstellt wurde. Der zugehörige Quellcode ist in einem GitHub-Repository dokumentiert \cite{githubdoc}. Die Länge des Videos bleibt unter 15 Minuten, und es ist vollständig vertont. Basierend auf dem Feedback von Kommilitonen wurde das Konzept von NEAT verständlich vermittelt. Dabei hat der Ersteller des Videos aktiv auf wichtige Visualisierungsgrundlagen, wie Farbkomposition und Lesbarkeit, geachtet. Die durchgängige Struktur und Verständlichkeit wird durch das zuvor angefertigte Storyboard sichergestellt. Das Video wurde als angenehm anzusehen bewertet, was größtenteils auf die Qualität der Animationen zurückzuführen ist.
+Die Bewertung der Visualisierung basiert auf dem eingereichten Video. Aus diesem lässt sich erkennen, dass das gesamte Video im Manim-Stil erstellt wurde. Der zugehörige Quellcode ist in einem GitHub-Repository dokumentiert \cite{githubdoc}. Die Länge des Videos ist mit 18 Minuten relativ lang, aber noch im Rahmen der Anforderung. Es ist vollständig vertont. Basierend auf dem Feedback von Kommilitonen wurde das Konzept von NEAT verständlich vermittelt. Dabei hat der Ersteller des Videos aktiv auf wichtige Visualisierungsgrundlagen, wie Farbkomposition und Lesbarkeit, geachtet. Die durchgängige Struktur und Verständlichkeit wird durch das zuvor angefertigte Storyboard sichergestellt. Das Video wurde als angenehm anzusehen bewertet, was größtenteils auf die Qualität der Animationen zurückzuführen ist.
 
 \begin{figure}[h] % 'h' bedeutet, dass LaTeX versuchen wird, das Bild an dieser Stelle einzufügen
 	\centering % Zentriert das Bild horizontal
@@ -47,7 +47,7 @@ Die Evaluierung der Implementierung basiert, wie aus der Grafik ersichtlich, auf
 		\multirow{34}{*}[4ex]{\rotatebox[origin=c]{90}{\centering \textbf{Visualisierung}}} & \textbf{Anforderungen} & \textbf{Erfüllt} \\
 		\cline{2-3}
 		& Das Video wurde durch Python und Manim animiert und gerendert & $\checkmark$ \\[4ex]
-		& Die Länge des Videos überschreitet nicht 15 Minuten & $\checkmark$ \\[4ex]
+		& Die Länge des Videos überschreitet nicht 15 Minuten maßgeblich & $\checkmark$ \\[4ex]
 		& Das Video ist vollständig vertont & $\checkmark$ \\[4ex]
 		\cline{2-3}
 		\multirow{44}{*}[10ex]{\rotatebox[origin=c]{90}{\centering \textbf{Implementierung}}} & Das Konzept von NEAT soll vollständig und verständlich sein & $\checkmark$ \\[4ex]
@@ -69,4 +69,4 @@ Die Evaluierung der Implementierung basiert, wie aus der Grafik ersichtlich, auf
 Basierend auf diesen Ergebnissen kann die Evaluation als komplett angesehen werden. Alle festgelegten technischen und nicht-technischen Anforderungen konnten umgesetzt werden, sodass das Projekt vollständig nach den Vorgaben implementiert wurde.
 
 \section{Handlungsempfehlungen}
-In diesem Beispiel konnte NEAT sehr gute Ergebnisse erzielen und die Anforderungen des Spiels meistern. Der Algorithmus fand eine sehr gute Lösung und konnte die Eingabewerte entsprechend generalisieren und verwenden. Vermutlich hätte ein Deep Learning- oder Reinforcement Learning-Ansatz dies ebenso geschafft, allerdings mit einer wesentlich einfacheren und generalistischeren Implementierung. Daher stellt sich die Frage nach der Zukunft der genetischen Algorithmen. Es scheint, dass NEAT für bestimmte Zwecke sehr gut funktioniert, jedoch eine relativ strikte Struktur voraussetzt. Ein weiteres Problem ist die hohe Fitness-Volatilität zwischen den Epochen, die das Lernen in späteren Phasen verlangsamen kann. Für einen allgemeineren Ansatz hat sich nach unserer Einschätzung Deep Learning als Favorit herauskristallisiert, da es einen generalistischen Ansatz für Lernprobleme verfolgt. In diesem Bereich gibt es zudem erhebliches Forschungspotential, das noch ausgeschöpft werden kann. Eine Kombination von auf natürlichen Prinzipien basierender Selektion während des Deep Learning-Prozesses ist allerdings eine denkbare Möglichkeit.
+In diesem Beispiel konnte NEAT sehr gute Ergebnisse erzielen und die Anforderungen des Spiels meistern. Der Algorithmus fand eine sehr gute Lösung und konnte die Eingabewerte entsprechend generalisieren und verwenden. Vermutlich hätte ein Deep Learning- oder Reinforcement Learning-Ansatz dies ebenso geschafft, allerdings mit einer wesentlich einfacheren und generalistischeren Implementierung. Daher stellt sich die Frage nach der Zukunft der genetischen Algorithmen. Es scheint, dass NEAT für bestimmte Zwecke sehr gut funktioniert, jedoch eine relativ strikte Struktur voraussetzt. Ein weiteres Problem ist die hohe Fitness-Volatilität zwischen den Epochen, die das Lernen in späteren Phasen verlangsamen kann. Für einen allgemeineren Ansatz hat sich nach unserer Einschätzung Deep Learning als Favorit herauskristallisiert, da es einen generalistischen Ansatz für Lernprobleme verfolgt. In diesem Bereich gibt es zudem erhebliches Forschungspotential, das noch ausgeschöpft werden kann. 
