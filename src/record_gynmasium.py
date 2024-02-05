@@ -1,3 +1,5 @@
+# This file demonstrates how to record a video a run
+
 from gymnasium.wrappers import RecordVideo
 from manim_utils import read_file
 from classes.NEAT import *

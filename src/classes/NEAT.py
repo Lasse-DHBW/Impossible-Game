@@ -1,13 +1,20 @@
-# %%
 import numpy as np 
-
+import torch 
+from typing import Dict 
+import os 
+from copy import deepcopy
+import pandas as pd
+from multiprocessing import Pool
+from typing import List
+from datetime import datetime 
+import uuid
 # %%
-# sources of knowledge
+# === sources of knowledge ===
 # the website of the original author talks about issues and parameters of the algorithm https://www.cs.ucf.edu/~kstanley/neat.html
 # cleared up, what mutation power is supposed to be https://digitalcommons.colby.edu/cgi/viewcontent.cgi?article=1836&context=honorstheses
 
-# %% [markdown]
-# # NEAT
+# (Rough sketching idea before coding was done
+# NEAT
 # 1. Classes and Functions
 # - 1.1. Neural Network (Genotype)->Phenotype, input, output dim, contains mutation: 
 # - 1.2. Genotype: A->B: connection gene, A:Node gene, is_disabled, weight, keep track of gene history
@@ -15,12 +22,17 @@ import numpy as np
 # - 1.4. Species, represented by random member
 # - 1.5. Speciation (List of Species)-> List of Species
 # - 1.6. Fitness Calculation (Species)
-# - 1.7.
+# )
 
-# %%
-
-from copy import deepcopy
-import pandas as pd
+# === Actual Implementation ===
+# We experimented with probabilities of parents being proportional to the square of their fitnesses (can be found in the code).
+# The object oriented approach is chosen.
+# Generally, we keep track of node genes using a history object, 
+# e.g. for a new connection gene we check if e.g. a connection between two node genes already exist, 
+# then the gene inherits the corresponding history number, otherwise a new gene is added
+# The neural network is then built from the genotype description (connection genes specifying the computational graph), therefore there is no matrix multiplication, but it is computed on a per-node basis
+# We use multiprocessing for speedup, since the forward pass is inefficient.
+# In the original paper it was not specified, how weight mutation is done exactly, we chose to use a normal distribution with a magnitude parameter (similar to already existing python implementations)
 
 class History:
     def __init__(self):
@@ -125,8 +137,7 @@ class Connection_Gene:
         self.is_disabled = is_disabled
         self.innovation_number = connection_gene_history.get_innovation_number(connection)
         
-# make unique uuid
-import uuid
+
       
 class Genotype:
     def __init__(self, node_genes, connection_genes,
@@ -215,23 +226,11 @@ class Genotype:
         self.node_genes.remove(node_gene)
         del self.node_genes_dict[node_gene.innovation_number]
         # remove connection genes
-        # save the in and out node of the connection gene
-        # in_nodes = []
-        # out_nodes = []
         for connection_gene in self.connection_genes:
             if connection_gene.in_node == node_gene.innovation_number or connection_gene.out_node == node_gene.innovation_number:
-                # if connection_gene.in_node not in in_nodes:
-                #     in_nodes.append(connection_gene.in_node)
-                # elif connection_gene.out_node not in out_nodes:
-                #     out_nodes.append(connection_gene.out_node)
-                    
                 self.connection_genes.remove(connection_gene)
                 del self.connection_genes_dict[connection_gene.innovation_number]
         
-        # enable previous connection genes
-        # for connection_gene in self.connection_genes:
-        #     if connection_gene.in_node in in_nodes and connection_gene.out_node in out_nodes:
-        #         connection_gene.is_disabled = False
     
     def remove_connection(self):
         # select a random connection gene
@@ -314,22 +313,6 @@ class Genotype:
                 elif self.connection_genes_dict[self.connection_gene_history.history[connection_name]].is_disabled: # if connection is disabled we take it and enable
                     self.connection_genes_dict[self.connection_gene_history.history[connection_name]].is_disabled = False
                     return
-                
-                
-                # if connection not in the network
-                # for key in self.connection_gene_history.history.keys():
-                #     if key.startswith(connection):
-                    
-                # print(self.connection_gene_history.history)
-                # if self.connection_gene_history.history[connection] not in self.connection_genes_dict:
-                #     # add connection gene
-                #     connection_gene = Connection_Gene(src.innovation_number, dst.innovation_number, np.random.normal(), False, self.connection_gene_history)
-                #     self.connection_genes.append(connection_gene)
-                #     self.connection_genes_dict[connection_gene.innovation_number] = connection_gene
-                #     return # only add connection if one is possible
-                # elif self.connection_genes_dict[self.connection_gene_history.history[connection]].is_disabled: # if connection is disabled we take it and enable
-                #     self.connection_genes_dict[self.connection_gene_history.history[connection]].is_disabled = False
-                #     return 
     
     def _crossover_genes(self, fitness_self, fitness_other, genes_self, genes_other):
         more_fit = genes_self if fitness_self > fitness_other else genes_other
@@ -411,9 +394,7 @@ class Genotype:
     def __str__(self):
         return str(self.node_genes) + '\n' + str(self.connection_genes)
 
-# %%
-import torch 
-from typing import Dict 
+
 
 
 
@@ -486,14 +467,10 @@ class NeuralNetwork(torch.nn.Module):
             sorted_output_nodes = sorted(self.dst_level_nodes)
             return [node_repr[node] for node in sorted_output_nodes]
 
-# nn = NeuralNetwork(genotype1)
-# x = {0:torch.tensor([-1.0]),1:torch.tensor([0.3])}
-# nn.forward(x)
+
 
 # %%
-from typing import List
-from datetime import datetime 
-from tqdm.auto import tqdm
+
 class Species:
     def __init__(self, representative, genotypes, distance_delta, number):
         # random representative
@@ -531,8 +508,7 @@ def get_proportional_bins(proportions, n_bins):
             bins[index] += 1
     
     return bins
-from multiprocessing import Pool
-from multiprocessing.pool import ThreadPool
+
 
 species_number_tracker = 0
 from functools import partial
@@ -621,9 +597,6 @@ def evolve_once(features, target,
         
         species_with_increased_fitness_last15gens.append(sp) # only allow reproduction if fitness increased
         
-        
-        
-        #species_total_adjusted_fitness.append(sum(adjusted_fitnesses))
         mask = np.argsort(adjusted_fitnesses)
         top_n_fitness_indices = mask[-int(fitness_survival_rate*len(adjusted_fitnesses)):]
         fit_individuals = [(genotype, fitness) for genotype, fitness in zip(np.array(sp.genotypes)[top_n_fitness_indices], np.array(adjusted_fitnesses)[top_n_fitness_indices])]
@@ -632,11 +605,11 @@ def evolve_once(features, target,
         top_species_adjusted_fitness.append(fit_individuals)
         print(generation_number, 'Species:', i, 'mean fitness:', np.mean(fitnesses), 'best fitness:', max(adjusted_fitnesses)*len(sp.genotypes), 'worst fitness', min(adjusted_fitnesses)*len(sp.genotypes),  'average_connection_genes:', np.mean(genotype_size))   
         
-        if run_folder is not None: #  and generation_number%10==0:
+        if run_folder is not None:
             with open(run_folder+f'/fitness_{generation_number}.txt', 'a+') as f:
                 f.write('Species: '+str(i)+' mean fitness: '+str(np.mean(fitnesses))+' best fitness: '+str(max(adjusted_fitnesses)*len(sp.genotypes))+' average_connection_genes: '+str(np.mean(genotype_size))+'\n')
     
-    if run_folder is not None:# and generation_number%10==0:
+    if run_folder is not None:
         # save species as torch pt
         torch.save(species, run_folder+f'/species_{generation_number}.pt')
             
@@ -752,7 +725,6 @@ def evolve_once(features, target,
         
     return new_species, False, None
 
-import os 
 def evolve(features, target, fitness_function, stop_at_fitness:float, n_generations, species:Species, fitness_survival_rate, interspecies_mate_rate, distance_delta, largest_species_linkadd_rate, eliminate_species_after_n_generations, run_folder=None, elitism=False, n_workers=1, gymnasium_env=None):
     if run_folder is not None:
         os.makedirs(run_folder)
@@ -769,120 +741,3 @@ def evolve(features, target, fitness_function, stop_at_fitness:float, n_generati
             return species, solutions
 
     return species, None
-
-# %%
-def xor_fitness(network:NeuralNetwork, inputs, targets, print_fitness=False):
-    #error = 0
-    fitness = 4
-    for input, target in zip(inputs, targets):
-        output = network.forward(input)[0]
-        if output is None:
-            return torch.tensor([0]) # if network has no connected nodes (all are disabled)
-        fitness -= (output - target)**2
-    
-   
-    return fitness
-
-# %%
-
-# if __name__ == '__main__':
-#     import random 
-#     random.seed(14)
-#     torch.manual_seed(14)
-#     np.random.seed(14)
-    
-#     n_networks = 150
-    
-
-#     # Fitness:
-#     c1 = 1
-#     c2 = 1
-#     c3 = 0.4
-#     distance_delta = 6
-
-
-#     weight_magnitude = 2.5 # std of weight mutation
-#     # Mutation
-#     mutate_weight_prob = 0.8
-#     mutate_weight_perturb = 0.8
-#     mutate_weight_random = 1 - mutate_weight_perturb
-#     mutate_add_node_prob = 0.02
-#     mutate_remove_node_prob = 0.02
-#     mutate_add_link_prob_large_pop = 0.08
-#     mutate_add_link_prob = 0.02
-#     mutate_remove_link_prob = 0.02
-
-#     offspring_without_crossover = 0.25
-#     interspecies_mate_rate = 0.001
-
-#     fitness_survival_rate = 0.2
-#     interspecies_mate_rate = 0.001
-
-
-#     node_gene_history = Node_Gene_History()
-#     connection_gene_history = Connection_Gene_History()
-
-#     genotypes = []
-
-
-#     for _ in range(n_networks):
-#         node_genes = [
-#             Node_Gene(None, None, node_gene_history, add_initial=True, add_initial_node_level=0, initial_node_id=0), 
-#             Node_Gene(None, None, node_gene_history, add_initial=True, add_initial_node_level=0, initial_node_id=1),
-#             Node_Gene(None, None, node_gene_history, add_initial=True, add_initial_node_level=0, initial_node_id=2),
-#             Node_Gene(None, None, node_gene_history, add_initial=True, add_initial_node_level=1, initial_node_id=3)
-#         ]
-        
-#         connection_genes = [
-#             Connection_Gene(0, 3, np.random.normal(), False, connection_gene_history), # bias
-#             Connection_Gene(1, 3, np.random.normal(), False, connection_gene_history), # input 1 
-#             Connection_Gene(2, 3, np.random.normal(), False, connection_gene_history), # input 2
-#         ]
-        
-#         genotype = Genotype(
-#             node_genes, connection_genes, node_gene_history, connection_gene_history, 
-#             mutate_weight_prob, mutate_weight_perturb, mutate_weight_random, mutate_add_node_prob, mutate_remove_node_prob,  mutate_add_link_prob, mutate_remove_link_prob, weight_magnitude,
-#             c1, c2, c3)
-#         genotypes.append(genotype)
-
-#     # %%
-#     # xor
-#     inputs = [
-#         {0:torch.tensor([1.0]),1:torch.tensor([0.0]),2:torch.tensor([0.0])},
-#         {0:torch.tensor([1.0]),1:torch.tensor([1.0]),2:torch.tensor([0.0])},
-#         {0:torch.tensor([1.0]),1:torch.tensor([0.0]),2:torch.tensor([1.0])},
-#         {0:torch.tensor([1.0]),1:torch.tensor([1.0]),2:torch.tensor([1.0])}
-#         # xor:
-#         # bias 1, 00, 01, 10, 11
-#     ]
-#     targets = [
-#         torch.tensor([0.0]),
-#         torch.tensor([1.0]),
-#         torch.tensor([1.0]),
-#         torch.tensor([0.0])
-#     ]
-
-#     # %%
-#     len(genotypes)
-
-#     # %%
-    
-    
-#     initial_species = Species(np.random.choice(genotypes), genotypes, distance_delta)
-
-#     evolved_species, solutions = evolve(
-#         features=inputs, 
-#         target=targets, 
-#         fitness_function=xor_fitness, 
-#         stop_at_fitness=3.85, 
-#         n_generations=1000,
-#         species=[initial_species], 
-#         fitness_survival_rate=fitness_survival_rate, 
-#         interspecies_mate_rate=interspecies_mate_rate, 
-#         distance_delta=distance_delta,
-#         largest_species_linkadd_rate=mutate_add_link_prob_large_pop,
-#         eliminate_species_after_n_generations=20
-        
-#     )
-
-#     print(solutions)

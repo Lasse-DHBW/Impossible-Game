@@ -1,9 +1,0 @@
-Species: 0 mean fitness: -160.57609443750198 best fitness: 278.4690831645354 average_connection_genes: 21.813953488372093
-Species: 1 mean fitness: -187.0968431747995 best fitness: -32.16361476764986 average_connection_genes: 23.25
-Species: 2 mean fitness: -138.68778393852773 best fitness: -127.49793427898642 average_connection_genes: 15.25
-Species: 3 mean fitness: -317.0788277676196 best fitness: -27.06812857962405 average_connection_genes: 21.272727272727273
-Species: 4 mean fitness: -346.4893215827228 best fitness: 98.41545510139028 average_connection_genes: 20.666666666666668
-Species: 6 mean fitness: -95.53039569703866 best fitness: -61.44046661008541 average_connection_genes: 19.5
-Species: 7 mean fitness: -191.00235629506167 best fitness: -56.63321705855933 average_connection_genes: 19.61111111111111
-Species: 8 mean fitness: -258.8261695071886 best fitness: -84.3574601640249 average_connection_genes: 24.333333333333332
-Species: 9 mean fitness: -345.1227607548079 best fitness: -240.51438470429903 average_connection_genes: 12.0
