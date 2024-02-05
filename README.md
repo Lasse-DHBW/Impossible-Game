@@ -12,7 +12,7 @@ Theorieteil als PDF (etwa 5 Seiten pP): Grundlagen / Literaturrecherche zum Them
 
 Manim-Quellcode (hier beilegen oder verlinken) in Repo veröffentlichen: Eigenes Github Repo mit open-source Lizenz oder als PR hier: https://github.com/maschere/manim-algorithmic-vis
 
-## Running the Neat Algorithm
+## Running the NEAT Algorithm
 Tested on Ubuntu inside WSL-2 on Windows 11.
 ``` python
 conda env create --file 0__environment_run_neat.yml  # from src folder
