@@ -20,7 +20,7 @@ conda activate neat
 python 0_continuous_lunar_lander.py
 ```
 - ```0_continuous_lunar_lander.py``` allows the modification of the different probabilities and other parameters of the NEAT algorithm (As well as specifying a different environment and fitness function).
-- a run will create a folder inside ```src/runs/``` where the genotypes for each generation and their evaluated fitnesses are saved.
+- A run will create a folder inside ```src/runs/``` where the genotypes for each generation and their evaluated fitnesses are saved.
 - Using ```1_best_continuous_lunar_lander.py```, different landers can be visualized.
 - The complete NEAT algorithm code is in ```src/classes/NEAT.py```.
 
