@@ -1,4 +1,4 @@
-# The final product
+# The Final Product
 
 The final video can be found on Youtube: https://www.youtube.com/watch?v=yVtdp1kF0I4
 This repository contains the data and code used to create the animation.
@@ -18,7 +18,7 @@ python 0_continuous_lunar_lander.py
 - Using `1_best_continuous_lunar_lander.py`, different landers can be visualized.
 - The complete NEAT algorithm code is in `src/classes/NEAT.py`.
 
-# Rendering the manim animation
+# Rendering the Manim Animation
 
 Executed with pip venv on python 3.10.11.
 
