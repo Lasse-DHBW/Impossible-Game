@@ -3,7 +3,7 @@ media/
 manim_notes.py
 ideas.py
 manim_experiments.py
-src/runs/
+src/runs/continuous_lunar_lander/backup
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
