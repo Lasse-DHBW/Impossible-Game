@@ -1,12 +1,9 @@
-# Impossible-Game
+# The final product
 
-Repo for the "Integrationsseminar" at DHBW Mannheim
+The final video can be found on Youtube: https://www.youtube.com/watch?v=yVtdp1kF0I4
+This repository contains the data and code used to create the animation.
 
-Erstellung eines Erklär-Videos mithilfe des packages Manim, in welchem das Thema Neuroevolution anhand einer Replikation der Videospiel-App "The impossible game", bzw. "Geometry Dash" erläutert wird.
-
-Gruppenarbeit (3 Studierende; 2 oder 4 in Ausnahmen)
-
-## Running the NEAT Algorithm
+# Running the NEAT Algorithm
 
 Tested on Ubuntu inside WSL-2 on Windows 11.
 
@@ -21,7 +18,7 @@ python 0_continuous_lunar_lander.py
 - Using `1_best_continuous_lunar_lander.py`, different landers can be visualized.
 - The complete NEAT algorithm code is in `src/classes/NEAT.py`.
 
-## Rendering the manim animation
+# Rendering the manim animation
 
 Executed with pip venv on python 3.10.11.
 
