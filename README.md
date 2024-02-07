@@ -1,6 +1,6 @@
 # The Final Product
 
-The final video can be found on Youtube: https://www.youtube.com/watch?v=yVtdp1kF0I4
+The final video can be found on Youtube: https://www.youtube.com/watch?v=yVtdp1kF0I4  
 This repository contains the data and code used to create the animation.
 
 # Running the NEAT Algorithm
